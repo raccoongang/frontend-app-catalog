@@ -13,11 +13,16 @@ import {
 } from '@tanstack/react-query';
 import Header from '@edx/frontend-component-header';
 import { FooterSlot } from '@edx/frontend-component-footer';
+import { Routes, Route } from 'react-router-dom';
+import { Container } from '@openedx/paragon';
 
-import ExamplePage from './example/ExamplePage';
 import messages from './i18n';
-
 import './index.scss';
+
+import HomePage from './features/home/HomePage';
+import CourseAboutPage from './features/course-about/CourseAboutPage';
+import CatalogPage from './features/сatalog/CatalogPage';
+import NotFoundPage from './features/not-found-page/NotFoundPage';
 
 const queryClient = new QueryClient();
 const container = document.getElementById('root');
@@ -28,7 +33,16 @@ subscribe(APP_READY, () => {
     <AppProvider>
       <QueryClientProvider client={queryClient}>
         <Header />
-        <ExamplePage />
+        <main>
+          <Container className="content-wrapper">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/courses" element={<CatalogPage />} />
+              <Route path="/courses/:courseId/about" element={<CourseAboutPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Container>
+        </main>
         <FooterSlot />
       </QueryClientProvider>
     </AppProvider>,
