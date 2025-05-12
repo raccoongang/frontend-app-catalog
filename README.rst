@@ -9,9 +9,14 @@ Purpose
 
 This is the Catalog micro-frontend application, currently under development by `2U <https://2u.com>`_.
 
-Its purpose is to provide both a framework and UI for new or replacement
-React-based authoring features outside ``edx-platform``.
-You can find the current set described below.
+**What is the domain of this MFE?**
+
+- Home / Index page
+- Course About page
+- Course Catalog page
+
+These are public-facing pages intended for unauthenticated users.
+The goal is to replace legacy views in ``edx-platform`` with modern, React and Paragon-based implementations.
 
 Getting Started
 ***************
