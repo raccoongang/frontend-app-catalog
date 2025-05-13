@@ -1,4 +1,4 @@
-import React from 'react';
+import { Container } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import messages from './messages';
@@ -7,14 +7,11 @@ const NotFoundPage = () => {
   const intl = useIntl();
 
   return (
-    <div
-      className="container-fluid d-flex py-5 justify-content-center align-items-start text-center"
-      data-testid="not-found-page"
-    >
-      <p className="my-0 py-5 text-muted" style={{ maxWidth: '32em' }}>
+    <Container>
+      <p className="my-0 py-5 text-muted text-center not-found-message mx-auto">
         {intl.formatMessage(messages.title)}
       </p>
-    </div>
+    </Container>
   );
 };
 

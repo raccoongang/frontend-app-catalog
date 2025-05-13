@@ -1,5 +1,3 @@
-import React from 'react';
-
 const HomePage = () => (
   // TODO: remove it when will start develop page
   <h1>Home page</h1>

@@ -15,13 +15,13 @@ import { FooterSlot } from '@edx/frontend-component-footer';
 import { Routes, Route } from 'react-router-dom';
 import { Container } from '@openedx/paragon';
 
-import messages from './i18n';
-import './index.scss';
-
 import HomePage from './home/HomePage';
 import CatalogPage from './сatalog/CatalogPage';
 import CourseAboutPage from './course-about/CourseAboutPage';
 import NotFoundPage from './not-found-page/NotFoundPage';
+
+import messages from './i18n';
+import './index.scss';
 
 const queryClient = new QueryClient();
 const container = document.getElementById('root');

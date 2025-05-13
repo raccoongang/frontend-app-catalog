@@ -1,5 +1,3 @@
-import React from 'react';
-
 const CourseAboutPage = () => (
   // TODO: remove it when will start develop page
   <h1>Course About Page</h1>

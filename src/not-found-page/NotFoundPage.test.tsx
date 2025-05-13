@@ -1,10 +1,8 @@
-import React from 'react';
-import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 
 import NotFoundPage from './NotFoundPage';
 import messages from './messages';
+import { render } from '../setupTest';
 
 const renderComponent = () => render(
   <IntlProvider locale="en">
