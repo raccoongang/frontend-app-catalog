@@ -1,13 +1,9 @@
-import { IntlProvider } from '@edx/frontend-platform/i18n';
-
 import NotFoundPage from './NotFoundPage';
 import messages from './messages';
 import { render } from '../setupTest';
 
 const renderComponent = () => render(
-  <IntlProvider locale="en">
-    <NotFoundPage />
-  </IntlProvider>,
+  <NotFoundPage />,
 );
 
 describe('<NotFoundPage />', () => {
