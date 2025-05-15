@@ -1,16 +1,9 @@
-import { Button, Form, Stack } from '@openedx/paragon';
+interface SubHeaderProps {
+  title: string;
+}
 
-// eslint-disable-next-line react/prop-types
-export const SubHeader = ({ title }) => (
-  <header className="my-4 d-flex justify-content-between">
-    <h1>{title}</h1>
-    <Stack direction="horizontal">
-      <Form.Group className="mb-0">
-        <Form.Control floatingLabel="Search for a course" />
-      </Form.Group>
-      <Button>
-        Search
-      </Button>
-    </Stack>
+export const SubHeader = ({ title }: SubHeaderProps) => (
+  <header className="sub-header d-flex justify-content-between">
+    <h1 className="mb-0">{title}</h1>
   </header>
 );

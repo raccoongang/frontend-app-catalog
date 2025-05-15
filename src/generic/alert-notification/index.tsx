@@ -1,9 +1,13 @@
 import { Alert as BaseAlert } from '@openedx/paragon';
 import { Info as InfoIcon } from '@openedx/paragon/icons';
 
-export const AlertNotification = () => (
-  <BaseAlert variant="danger" dismissible icon={InfoIcon}>
-    <BaseAlert.Heading>Some error</BaseAlert.Heading>
-    <p>Error text</p>
+import { AlertNotificationProps } from './types';
+
+export const AlertNotification = ({
+  variant = 'info', title, message,
+}: AlertNotificationProps) => (
+  <BaseAlert variant={variant} icon={InfoIcon}>
+    <BaseAlert.Heading>{title}</BaseAlert.Heading>
+    <p>{message}</p>
   </BaseAlert>
 );

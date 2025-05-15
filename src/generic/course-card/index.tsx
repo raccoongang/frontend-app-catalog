@@ -1,31 +1,43 @@
 import {
   Card, useMediaQuery, breakpoints, Hyperlink,
 } from '@openedx/paragon';
+import { useIntl } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 
-export const CourseCard = () => {
+import { CourseCardProps } from './types';
+
+import noCourseImg from '../../assets/no-course-image.png';
+
+export const CourseCard = ({ course }: CourseCardProps) => {
+  const intl = useIntl();
   const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.small.maxWidth });
+
+  const formattedDate = course?.data?.start
+    ? intl.formatDate(new Date(course.data.start), {
+      month: 'short', day: 'numeric', year: 'numeric',
+    })
+    : '';
 
   return (
     <Card
       as={Hyperlink}
-      destination="https://www.edx.org"
+      destination={`${getConfig().LMS_BASE_URL}/courses/${course.id}/about`}
       style={{ width: isExtraSmall ? '100%' : '396px' }}
       isClickable
+      className="course-card"
     >
       <Card.ImageCap
-        src="https://picsum.photos/360/200/"
-        fallbackSrc="https://picsum.photos/360/200/"
-        srcAlt="Card image"
-        logoSrc="https://via.placeholder.com/150"
-        fallbackLogoSrc="https://www.edx.org/images/logos/edx-logo-elm.svg"
-        logoAlt="Card logo"
+        src={`${getConfig().LMS_BASE_URL}${course.data.imageUrl}`}
+        fallbackSrc={noCourseImg}
+        srcAlt={course.data.content.displayName}
       />
       <Card.Header
-        title="Open edX Demo Course"
-        subtitle="OpenedX"
+        title={course.data.content.displayName}
+        subtitle={course.data.org}
+        className="mb-4.5"
       />
-      <Card.Footer>
-        Starts: Jan 1, 2020
+      <Card.Footer className="justify-content-start">
+        Starts: {formattedDate}
       </Card.Footer>
     </Card>
   );

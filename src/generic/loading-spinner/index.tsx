@@ -1,28 +1,23 @@
-import PropTypes from 'prop-types';
 import { Spinner } from '@openedx/paragon';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
-export const LoadingSpinner = ({ size }) => (
-  <Spinner
-    animation="border"
-    role="status"
-    size={size}
-    screenReaderText={(
-      <FormattedMessage
-        id="authoring.loading"
-        defaultMessage="Loading..."
-        description="Screen-reader message for when a page is loading."
-      />
-    )}
-  />
-);
+import messages from './messages';
 
-LoadingSpinner.defaultProps = {
-  size: undefined,
-};
+interface LoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+}
 
-LoadingSpinner.propTypes = {
-  size: PropTypes.string,
+export const LoadingSpinner = ({ size = 'lg' }: LoadingSpinnerProps) => {
+  const intl = useIntl();
+
+  return (
+    <Spinner
+      animation="border"
+      role="status"
+      size={size}
+      screenReaderText={intl.formatMessage(messages.screenReaderText)}
+    />
+  );
 };
 
 export const Loading = () => (
@@ -30,5 +25,3 @@ export const Loading = () => (
     <LoadingSpinner />
   </div>
 );
-
-export default Loading;
