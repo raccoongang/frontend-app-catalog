@@ -10,6 +10,7 @@ export interface CourseData {
   start: string;
   imageUrl: string;
   org: string;
+  orgImg?: string;
   content: CourseContent;
   number: string;
   modes: string[];

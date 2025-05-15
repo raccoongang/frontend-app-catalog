@@ -11,6 +11,8 @@ import {
 import { useCourseDiscovery } from './data/hooks';
 import messages from './messages';
 
+const GRID_LAYOUT = { xl: [{ span: 9 }, { span: 3 }] };
+
 const CatalogPage = () => {
   const intl = useIntl();
   const {
@@ -29,22 +31,26 @@ const CatalogPage = () => {
     return (
       <Container className="py-5.5">
         <Alert variant="danger">
-          <ErrorPage message={intl.formatMessage(messages.errorMessage, {
-            supportEmail: getConfig().INFO_EMAIL,
-          })}
+          <ErrorPage
+            message={intl.formatMessage(messages.errorMessage, {
+              supportEmail: getConfig().INFO_EMAIL,
+            })}
           />
         </Alert>
       </Container>
     );
   }
 
-  const totalCourses = courseData?.results?.length || 0;
+  const totalCourses = courseData?.results?.length ?? 0;
 
   return (
     <main>
-      <Container className="pt-5.5">
-        <SubHeader title={`Viewing ${totalCourses} courses`} />
-        <Layout xl={[{ span: 9 }, { span: 3 }]}>
+      <Container className="container-xl pt-5.5">
+        <SubHeader title={intl.formatMessage(messages.totalCoursesHeading, {
+          totalCourses,
+        })}
+        />
+        <Layout {...GRID_LAYOUT}>
           <Layout.Element>
             {totalCourses === 0 ? (
               <AlertNotification
@@ -69,8 +75,7 @@ const CatalogPage = () => {
           <Layout.Element>
             {totalCourses > 0 && (
               <aside className="sidebar-wrapper">
-                {/* TODO: remove it when will start develop sidebar */}
-                Sidebar
+                {/* TODO: Implement sidebar functionality with filters and additional course information */}
               </aside>
             )}
           </Layout.Element>

@@ -1,7 +1,7 @@
 .course-list-wrapper {
-  margin-bottom: 124px;
-}
+  margin-bottom: 7.25rem;
 
-.sidebar-wrapper {
-  background-color: red;
+  &.pgn__card-grid .row > div[class*="col-"] {
+    margin-bottom: 1.5rem;
+  }
 }

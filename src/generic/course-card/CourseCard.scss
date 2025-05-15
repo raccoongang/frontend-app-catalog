@@ -1,13 +1,17 @@
 .course-card.pgn__card {
+  &.course-card-desktop {
+    width: 24.75rem;
+  }
+
   .pgn__card-wrapper-image-cap.vertical {
-    max-height: 132px;
+    max-height: 8.25rem;
   }
 
   .pgn__card-header {
-    padding: 0 24px;
+    padding: 0 1.5rem;
 
     .pgn__card-header-title-md {
-      margin-bottom: 4px;
+      margin-bottom: .25rem;
     }
 
     .pgn__card-header-subtitle-md {
@@ -16,7 +20,7 @@
   }
 
   .pgn__card-footer {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
