@@ -34,7 +34,6 @@ describe('AlertNotification', () => {
       variant: 'info',
     });
 
-    // The icon is rendered as an SVG
     expect(getByRole('alert').querySelector('svg')).toBeInTheDocument();
   });
 });

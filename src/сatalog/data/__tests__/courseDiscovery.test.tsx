@@ -3,10 +3,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
-import { mockCourseDiscoveryResponse } from '../__mocks__';
-import { fetchCourseDiscovery } from './api';
-import { useCourseDiscovery } from './hooks';
-import { COURSE_DISCOVERY_URL, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX } from './constants';
+import { mockCourseDiscoveryResponse } from '../../__mocks__';
+import { fetchCourseDiscovery } from '../api';
+import { useCourseDiscovery } from '../hooks';
+import { COURSE_DISCOVERY_URL, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX } from '../constants';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedHttpClient: jest.fn(),
