@@ -7,8 +7,8 @@ import messages from './messages';
 import { getFullImageUrl } from './utils';
 import { DATE_FORMAT_OPTIONS } from './constants';
 
-import noCourseImg from '../../assets/no-course-image.png';
-import noOrgImg from '../../assets/no-org-image.png';
+import noCourseImg from '../../assets/no-course-image.jpg';
+import noOrgImg from '../../assets/no-org-image.jpg';
 
 export const CourseCard = ({ course }: CourseCardProps) => {
   const intl = useIntl();
@@ -29,14 +29,13 @@ export const CourseCard = ({ course }: CourseCardProps) => {
         src={getFullImageUrl(course.data.imageUrl)}
         fallbackSrc={noCourseImg}
         srcAlt={course.data.content.displayName}
-        logoSrc={getFullImageUrl(course.data.orgImg)}
-        fallbackLogoSrc={noOrgImg}
+        logoSrc={course.data.orgImg ? getFullImageUrl(course.data.orgImg) : undefined}
+        fallbackLogoSrc={course.data.orgImg ? noOrgImg : undefined}
         logoAlt={course.data.org}
       />
       <Card.Header
         title={course.data.content.displayName}
         subtitle={course.data.org}
-        className="mb-4.5"
       />
       {formattedDate && (
         <Card.Footer className="justify-content-start">

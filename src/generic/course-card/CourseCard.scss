@@ -4,14 +4,20 @@
   }
 
   .pgn__card-wrapper-image-cap.vertical {
-    max-height: 8.25rem;
+    max-height: 8.75rem;
   }
 
   .pgn__card-header {
     padding: 0 map-get($spacers, 4);
+    margin-bottom: map-get($spacers, 4);
+
+    .pgn__card-header-content {
+      margin-top: map-get($spacers, 4);
+    }
 
     .pgn__card-header-title-md {
       margin-bottom: map-get($spacers, 1);
+      line-height: 1.75rem;
     }
 
     .pgn__card-header-subtitle-md {
