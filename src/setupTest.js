@@ -2,15 +2,18 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import '@testing-library/jest-dom';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
-import { render as rtlRender } from '@testing-library/react';
+import { render as rtlRender, within } from '@testing-library/react';
 import PropTypes from 'prop-types';
+import { MemoryRouter } from 'react-router-dom';
 
 function render(ui) {
   const Wrapper = ({ children }) => (
     // eslint-disable-next-line react/jsx-filename-extension
-    <IntlProvider locale="en">
-      {children}
-    </IntlProvider>
+    <MemoryRouter>
+      <IntlProvider locale="en">
+        {children}
+      </IntlProvider>
+    </MemoryRouter>
   );
 
   Wrapper.propTypes = {
@@ -22,4 +25,5 @@ function render(ui) {
 
 export {
   render,
+  within,
 };

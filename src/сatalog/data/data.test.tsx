@@ -3,6 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
+import { mockCourseDiscoveryResponse } from '../__mocks__';
 import { fetchCourseDiscovery } from './api';
 import { useCourseDiscovery } from './hooks';
 import { COURSE_DISCOVERY_URL, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX } from './constants';
@@ -13,57 +14,9 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 
 const mockGetAuthenticatedHttpClient = getAuthenticatedHttpClient as jest.Mock;
 
-const mockCourseDiscoveryResponse = {
-  count: 2,
-  results: [
-    {
-      id: '1',
-      title: 'Test Course 1',
-      data: {
-        id: '1',
-        course: 'course-1',
-        start: '2024-01-01',
-        imageUrl: 'https://example.com/image1.jpg',
-        org: 'edX',
-        content: {
-          displayName: 'Test Course 1',
-          overview: 'Course overview',
-          number: 'TEST101',
-        },
-        number: 'TEST101',
-        modes: ['audit', 'verified'],
-        language: 'en',
-        catalogVisibility: 'both',
-      },
-    },
-    {
-      id: '2',
-      title: 'Test Course 2',
-      data: {
-        id: '2',
-        course: 'course-2',
-        start: '2024-02-01',
-        imageUrl: 'https://example.com/image2.jpg',
-        org: 'edX',
-        content: {
-          displayName: 'Test Course 2',
-          overview: 'Course overview 2',
-          number: 'TEST102',
-        },
-        number: 'TEST102',
-        modes: ['audit'],
-        language: 'en',
-        catalogVisibility: 'both',
-      },
-    },
-  ],
-};
-
 describe('Course Discovery Data Layer', () => {
   describe('fetchCourseDiscovery', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
+    beforeEach(() => jest.clearAllMocks());
 
     it('should fetch course discovery data with default parameters', async () => {
       const mockPost = jest.fn().mockResolvedValue({ data: mockCourseDiscoveryResponse });
@@ -82,7 +35,7 @@ describe('Course Discovery Data Layer', () => {
       const mockPost = jest.fn().mockResolvedValue({ data: mockCourseDiscoveryResponse });
       mockGetAuthenticatedHttpClient.mockReturnValue({ post: mockPost });
 
-      const customPageSize = 20;
+      const customPageSize = 21;
       const customPageIndex = 2;
 
       await fetchCourseDiscovery(customPageSize, customPageIndex);

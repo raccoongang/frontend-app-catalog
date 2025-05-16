@@ -1,15 +1,8 @@
-import { screen, within } from '@testing-library/react';
-import messages from './messages';
-import { render } from '../setupTest';
+import { render, within } from '../setupTest';
+import { useCourseDiscovery } from './data/hooks';
 import { mockCourseDiscoveryResponse } from './__mocks__';
 import CatalogPage from './CatalogPage';
-import { useCourseDiscovery } from './data/hooks';
-
-jest.mock('@edx/frontend-platform', () => ({
-  getConfig: jest.fn(() => ({
-    INFO_EMAIL: 'test@example.com',
-  })),
-}));
+import messages from './messages';
 
 jest.mock('./data/hooks', () => ({
   useCourseDiscovery: jest.fn(),
@@ -18,9 +11,7 @@ jest.mock('./data/hooks', () => ({
 const mockUseCourseDiscovery = useCourseDiscovery as jest.Mock;
 
 describe('CatalogPage', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(() => jest.clearAllMocks());
 
   it('should show loading state', () => {
     mockUseCourseDiscovery.mockReturnValue({
@@ -29,8 +20,8 @@ describe('CatalogPage', () => {
       data: null,
     });
 
-    render(<CatalogPage />);
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    const { getByRole } = render(<CatalogPage />);
+    expect(getByRole('status')).toBeInTheDocument();
   });
 
   it('should show empty courses state', () => {
@@ -43,9 +34,9 @@ describe('CatalogPage', () => {
       },
     });
 
-    render(<CatalogPage />);
-    expect(screen.getByText('Viewing 0 courses')).toBeInTheDocument();
-    const infoAlert = screen.getByRole('alert');
+    const { getByText, getByRole } = render(<CatalogPage />);
+    expect(getByText(messages.totalCoursesHeading.defaultMessage.replace('{totalCourses}', 0))).toBeInTheDocument();
+    const infoAlert = getByRole('alert');
     expect(within(infoAlert).getByText(messages.noCoursesAvailable.defaultMessage)).toBeInTheDocument();
     expect(within(infoAlert).getByText(messages.noCoursesAvailableMessage.defaultMessage)).toBeInTheDocument();
   });
@@ -57,12 +48,14 @@ describe('CatalogPage', () => {
       data: mockCourseDiscoveryResponse,
     });
 
-    render(<CatalogPage />);
-    expect(screen.getByText(`Viewing ${mockCourseDiscoveryResponse.results.length} courses`)).toBeInTheDocument();
+    const { getByText } = render(<CatalogPage />);
+    expect(getByText(
+      messages.totalCoursesHeading.defaultMessage.replace('{totalCourses}', mockCourseDiscoveryResponse.results.length),
+    )).toBeInTheDocument();
 
     // Verify all courses are displayed
     mockCourseDiscoveryResponse.results.forEach(course => {
-      expect(screen.getByText(course.data.content.displayName)).toBeInTheDocument();
+      expect(getByText(course.data.content.displayName)).toBeInTheDocument();
     });
   });
 });

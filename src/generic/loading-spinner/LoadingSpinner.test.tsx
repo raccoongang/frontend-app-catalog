@@ -1,6 +1,4 @@
-import { within } from '@testing-library/react';
-
-import { render } from '../../setupTest';
+import { render, within } from '../../setupTest';
 import { LoadingSpinner, Loading } from '.';
 
 import messages from './messages';

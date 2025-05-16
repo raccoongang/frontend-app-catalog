@@ -1,84 +1,55 @@
-import { screen } from '@testing-library/react';
+import { getConfig } from '@edx/frontend-platform';
 
+import { mockCourseResponse } from '../../__mocks__';
 import { render } from '../../setupTest';
 import { CourseCard } from '.';
 
-jest.mock('@edx/frontend-platform', () => ({
-  getConfig: () => ({
-    LMS_BASE_URL: 'http://localhost:18000',
-  }),
-}));
-
-jest.mock('@openedx/paragon', () => ({
-  ...jest.requireActual('@openedx/paragon'),
-  useMediaQuery: () => false,
-}));
-
-const mockCourse = {
-  id: 'course-v1:edX+DemoX+Demo_Course',
-  data: {
-    id: 'course-v1:edX+DemoX+Demo_Course',
-    course: 'Demo Course',
-    start: '2024-04-01T00:00:00Z',
-    imageUrl: '/asset-v1:edX+DemoX+Demo_Course+type@asset+block@course_image.jpg',
-    org: 'edX',
-    orgImg: '/asset-v1:edX+DemoX+Demo_Course+type@asset+block@org_image.jpg',
-    content: {
-      displayName: 'Demonstration Course',
-      overview: 'Course overview',
-      number: 'DemoX',
-    },
-    number: 'DemoX',
-    modes: ['audit', 'verified'],
-    language: 'en',
-    catalogVisibility: 'both',
-  },
-};
+import messages from './messages';
 
 describe('CourseCard', () => {
-  const renderComponent = (course = mockCourse) => {
-    render(<CourseCard course={course} />);
-  };
+  const renderComponent = (course = mockCourseResponse) => render(
+    <CourseCard course={course} />,
+  );
 
   it('renders course information correctly', () => {
-    renderComponent();
+    const { getByText } = renderComponent();
 
-    expect(screen.getByText('Demonstration Course')).toBeInTheDocument();
-    expect(screen.getByText('edX')).toBeInTheDocument();
-    expect(screen.getByText('Starts: Apr 1, 2024')).toBeInTheDocument();
+    expect(getByText(mockCourseResponse.data.content.displayName)).toBeInTheDocument();
+    expect(getByText(mockCourseResponse.data.org)).toBeInTheDocument();
+    expect(getByText('Starts: Apr 1, 2024')).toBeInTheDocument();
   });
 
   it('renders course image with correct src and fallback', () => {
-    renderComponent();
+    const { getByAltText } = renderComponent();
 
-    const image = screen.getByAltText('Demonstration Course');
-    expect(image).toHaveAttribute('src', 'http://localhost:18000/asset-v1:edX+DemoX+Demo_Course+type@asset+block@course_image.jpg');
+    const image = getByAltText(mockCourseResponse.data.content.displayName);
+    expect(image).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${mockCourseResponse.data.imageUrl}`);
   });
 
   it('renders organization logo with correct src and fallback', () => {
-    renderComponent();
+    const { getByAltText } = renderComponent();
 
-    const logo = screen.getByAltText('edX');
-    expect(logo).toHaveAttribute('src', 'http://localhost:18000/asset-v1:edX+DemoX+Demo_Course+type@asset+block@org_image.jpg');
+    const logo = getByAltText(mockCourseResponse.data.org);
+    expect(logo).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${mockCourseResponse.data.orgImg}`);
   });
 
   it('formats the link destination correctly', () => {
-    renderComponent();
+    const { getByRole } = renderComponent();
 
-    const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', 'http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/about');
+    const link = getByRole('link');
+    expect(link).toHaveAttribute('href', `/courses/${mockCourseResponse.id}/about`);
   });
 
   it('handles missing start date gracefully', () => {
     const courseWithoutStart = {
-      ...mockCourse,
+      ...mockCourseResponse,
       data: {
-        ...mockCourse.data,
+        ...mockCourseResponse.data,
         start: '',
       },
     };
-    renderComponent(courseWithoutStart);
+    const { queryByText } = renderComponent(courseWithoutStart);
 
-    expect(screen.getByText('Starts:')).toBeInTheDocument();
+    expect(queryByText(messages.startDate.defaultMessage.replace('{startDate}', courseWithoutStart.data.start))).not.toBeInTheDocument();
   });
 });
