@@ -1,0 +1,52 @@
+@import "course-intro/course-media/CourseMedia";
+
+.course-about-intro {
+  .pgn__card {
+    min-height: 234px;
+  }
+
+  .course-about-intro-heading {
+    font-size: 32px;
+    line-height: 36px;
+  }
+
+  .pgn__card .pgn__card-header {
+    .pgn__card-header-content {
+      flex-direction: column-reverse;
+    }
+
+    .pgn__card-header-subtitle-md {
+      margin: 0;
+    }
+  }
+
+  .alert.course-about-intro-alert {
+    box-shadow: none;
+    padding: 0;
+    margin: 0 32px 0 0;
+
+    &.alert-success {
+     background-color: transparent;
+
+      .alert-heading {
+        color: var(--pgn-color-success-500);
+      }
+    }
+
+    &.alert-info {
+      background-color: transparent;
+
+      .alert-heading {
+        color: var(--pgn-color-info-500);
+      }
+    }
+
+    &.alert-danger {
+      background-color: transparent;
+
+      .alert-heading {
+        color: var(--pgn-color-danger-500);
+      }
+    }
+  }
+}
