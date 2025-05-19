@@ -44,44 +44,42 @@ const CatalogPage = () => {
   const totalCourses = courseData?.results?.length ?? 0;
 
   return (
-    <main>
-      <Container className="container-xl pt-5.5">
-        <SubHeader title={intl.formatMessage(messages.totalCoursesHeading, {
-          totalCourses,
-        })}
-        />
-        <Layout {...GRID_LAYOUT}>
-          <Layout.Element>
-            {totalCourses === 0 ? (
-              <AlertNotification
-                variant="info"
-                title={intl.formatMessage(messages.noCoursesAvailable)}
-                message={intl.formatMessage(messages.noCoursesAvailableMessage)}
-              />
-            ) : (
-              <CardGrid
-                hasEqualColumnHeights
-                className="course-list-wrapper"
-              >
-                {courseData?.results?.map(course => (
-                  <CourseCard
-                    key={course.id}
-                    course={course}
-                  />
-                ))}
-              </CardGrid>
-            )}
-          </Layout.Element>
-          <Layout.Element>
-            {totalCourses > 0 && (
-              <aside className="sidebar-wrapper">
-                {/* TODO: Implement sidebar functionality with filters and additional course information */}
-              </aside>
-            )}
-          </Layout.Element>
-        </Layout>
-      </Container>
-    </main>
+    <Container className="container-xl pt-5.5">
+      <SubHeader title={intl.formatMessage(messages.totalCoursesHeading, {
+        totalCourses,
+      })}
+      />
+      <Layout {...GRID_LAYOUT}>
+        <Layout.Element>
+          {totalCourses === 0 ? (
+            <AlertNotification
+              variant="info"
+              title={intl.formatMessage(messages.noCoursesAvailable)}
+              message={intl.formatMessage(messages.noCoursesAvailableMessage)}
+            />
+          ) : (
+            <CardGrid
+              hasEqualColumnHeights
+              className="course-list-wrapper"
+            >
+              {courseData?.results?.map(course => (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                />
+              ))}
+            </CardGrid>
+          )}
+        </Layout.Element>
+        <Layout.Element>
+          {totalCourses > 0 && (
+          <aside className="sidebar-wrapper">
+            {/* TODO: Implement sidebar functionality with filters and additional course information */}
+          </aside>
+          )}
+        </Layout.Element>
+      </Layout>
+    </Container>
   );
 };
 

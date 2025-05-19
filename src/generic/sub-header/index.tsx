@@ -1,6 +1,4 @@
-interface SubHeaderProps {
-  title: string;
-}
+import { SubHeaderProps } from './types';
 
 export const SubHeader = ({ title }: SubHeaderProps) => (
   <header className="sub-header d-flex justify-content-between">

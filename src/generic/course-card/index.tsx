@@ -1,7 +1,7 @@
+import { Link } from 'react-router-dom';
 import { Card, useMediaQuery, breakpoints } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { Link } from 'react-router-dom';
 import { CourseCardProps } from './types';
 import messages from './messages';
 import { getFullImageUrl } from './utils';

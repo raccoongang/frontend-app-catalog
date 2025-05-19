@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
+import { renderHook, waitFor } from '../../../setupTest';
 import { mockCourseDiscoveryResponse } from '../../__mocks__';
 import { fetchCourseDiscovery } from '../api';
 import { useCourseDiscovery } from '../hooks';
