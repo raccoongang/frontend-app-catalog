@@ -17,7 +17,7 @@ import HomePage from './home/HomePage';
 import CatalogPage from './сatalog/CatalogPage';
 import CourseAboutPage from './course-about/CourseAboutPage';
 import NotFoundPage from './not-found-page/NotFoundPage';
-import CourseCatalogHeader from './header/CourseCatalogHeader';
+import CatalogHeader from './header/CatalogHeader';
 import { ROUTES } from './routes';
 
 import messages from './i18n';
@@ -32,7 +32,7 @@ subscribe(APP_READY, () => {
   root.render(
     <AppProvider>
       <QueryClientProvider client={queryClient}>
-        <CourseCatalogHeader />
+        <CatalogHeader />
         <main className="d-flex flex-column flex-grow-1">
           <Routes>
             <Route path={ROUTES.HOME} element={<HomePage />} />

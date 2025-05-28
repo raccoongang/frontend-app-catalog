@@ -4,12 +4,12 @@ const messages = defineMessages({
   dashboard: {
     id: 'category.header.dashboard.label',
     defaultMessage: 'Dashboard',
-    description: 'The text for the link to the Dashboard page',
+    description: 'The text for the link to the Dashboard page.',
   },
   help: {
     id: 'category.header.help.label',
     defaultMessage: 'Help',
-    description: 'The text for the link to the Help Center',
+    description: 'The text for the link to the Help Center.',
   },
   courses: {
     id: 'category.header.course',

@@ -1,6 +1,0 @@
-export const REQUIRED_CONFIG = [
-  'SUPPORT_URL',
-  'LMS_BASE_URL',
-  'ENABLE_PROGRAMS',
-  'ENABLE_COURSE_DISCOVERY',
-] as const;
