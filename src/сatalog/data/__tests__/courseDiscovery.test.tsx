@@ -27,6 +27,7 @@ describe('Course Discovery Data Layer', () => {
       expect(mockPost).toHaveBeenCalledWith(COURSE_DISCOVERY_URL, {
         page_size: DEFAULT_PAGE_SIZE,
         page_index: DEFAULT_PAGE_INDEX,
+        search_query: '',
       });
       expect(result).toEqual(mockCourseDiscoveryResponse);
     });
@@ -37,12 +38,14 @@ describe('Course Discovery Data Layer', () => {
 
       const customPageSize = 21;
       const customPageIndex = 2;
+      const searchQuery = 'test';
 
-      await fetchCourseDiscovery(customPageSize, customPageIndex);
+      await fetchCourseDiscovery(customPageSize, customPageIndex, searchQuery);
 
       expect(mockPost).toHaveBeenCalledWith(COURSE_DISCOVERY_URL, {
         page_size: customPageSize,
         page_index: customPageIndex,
+        search_query: searchQuery,
       });
     });
 

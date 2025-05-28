@@ -16,12 +16,22 @@ import { CourseDiscoveryResponse } from './types';
 export const fetchCourseDiscovery = async (
   pageSize = DEFAULT_PAGE_SIZE,
   pageIndex = DEFAULT_PAGE_INDEX,
+  searchQuery = '',
 ): Promise<CourseDiscoveryResponse> => {
   const { data } = await getAuthenticatedHttpClient()
-    .post(COURSE_DISCOVERY_URL, {
-      page_size: pageSize,
-      page_index: pageIndex,
-    });
+    .post(
+      COURSE_DISCOVERY_URL,
+      {
+        search_string: searchQuery,
+        page_size: pageSize,
+        page_index: pageIndex,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+      },
+    );
 
   return camelCaseObject(data);
 };

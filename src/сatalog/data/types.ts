@@ -20,4 +20,11 @@ export interface CourseDiscoveryResponse {
       catalogVisibility: string;
     };
   }[];
+  aggs: {
+    [key: string]: {
+      terms: Record<string, number>;
+      total: number;
+      other: number;
+    };
+  };
 }

@@ -7,3 +7,11 @@
 @import "not-found-page/NotFoundPage";
 @import "сatalog/CatalogPage";
 @import "home/HomePage";
+
+.pgn__data-table-layout-sidebar {
+  min-width: 395px;
+}
+
+.pgn__data-table-layout-wrapper {
+  margin-bottom: 20px;
+}
