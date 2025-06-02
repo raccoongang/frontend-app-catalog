@@ -1,41 +1,55 @@
+import { useMemo } from 'react';
 import {
-  Icon, Image, useToggle,
+  Icon, Image, useToggle, Button,
 } from '@openedx/paragon';
 import { PlayCircleFilledWhite } from '@openedx/paragon/icons';
+import { getConfig } from '@edx/frontend-platform';
+import { useIntl } from '@edx/frontend-platform/i18n';
+
 import { VideoModal } from '../../../generic/video-modal';
+import { extractYouTubeVideoId, getMediaUris } from './utils';
+import { CourseMediaTypes } from './types';
+import messages from './messages';
 
-import { CourseMediaProps } from './types';
+import courseImagePlaceholder from '../../../assets/images/no-course-image.jpg';
 
-const CourseMedia = ({
-  imageUrl, videoId, altText,
-}: CourseMediaProps) => {
-  const [isOpen, open, close] = useToggle(false);
-  const embedVideoUrl = videoId ? `//www.youtube.com/embed/${videoId}` : '';
+const CourseMedia: React.FC<CourseMediaTypes> = ({ courseAboutData }) => {
+  const intl = useIntl();
+  const [isOpenVideoModal, openVideoModal, closeVideoModal] = useToggle(false);
+  const { imageUrl, videoUrl } = getMediaUris(courseAboutData);
+  const videoId = useMemo(() => extractYouTubeVideoId(videoUrl), [videoUrl]);
+
+  const imgSrc = imageUrl ? `${getConfig().LMS_BASE_URL}${imageUrl}` : courseImagePlaceholder;
+
+  const courseImage = (
+    <Image
+      className="course-media-image"
+      src={imgSrc}
+      alt={courseAboutData.name}
+      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+        e.currentTarget.src = courseImagePlaceholder;
+      }}
+    />
+  );
 
   return (
     <>
-      {embedVideoUrl && (
-        <VideoModal
-          isOpen={isOpen}
-          close={close}
-          videoID={videoId || ''}
-        />
+      {videoId && (
+        <VideoModal isOpen={isOpenVideoModal} close={closeVideoModal} videoID={videoId} />
       )}
       <div className="course-media-wrapper">
-        {embedVideoUrl ? (
+        {videoId ? (
           <div className="course-media-video-container">
-            <button
-              type="button"
+            <Button
               className="course-media-video-thumbnail"
-              onClick={open}
+              onClick={openVideoModal}
+              aria-label={intl.formatMessage(messages.playCourseIntroductionVideo)}
             >
-              <Image className="course-media-image" src={imageUrl} alt={altText} />
+              {courseImage}
               <Icon className="course-media-play-btn" src={PlayCircleFilledWhite} />
-            </button>
+            </Button>
           </div>
-        ) : (
-          <Image className="course-media-image" src={imageUrl} alt={altText} />
-        )}
+        ) : courseImage}
       </div>
     </>
   );

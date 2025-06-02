@@ -1,12 +1,13 @@
 import { Alert } from '@openedx/paragon';
 import { Info as InfoIcon, CheckCircle as CheckCircleIcon } from '@openedx/paragon/icons/es5';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
-interface StatusAlertProps {
-  variant: 'info' | 'success' | 'danger';
-  heading: string;
-}
+import messages from '../messages';
+import { StatusAlertTypes } from '../types';
 
-const StatusAlert = ({ variant, heading }: StatusAlertProps) => {
+const StatusAlert = ({ variant, messageKey }: StatusAlertTypes) => {
+  const intl = useIntl();
+
   const getIcon = () => {
     switch (variant) {
       case 'success':
@@ -24,7 +25,7 @@ const StatusAlert = ({ variant, heading }: StatusAlertProps) => {
       variant={variant}
       icon={getIcon()}
     >
-      <Alert.Heading>{heading}</Alert.Heading>
+      <Alert.Heading>{intl.formatMessage(messages[messageKey])}</Alert.Heading>
     </Alert>
   );
 };
