@@ -7,14 +7,14 @@ export interface CourseAboutDataTypes {
     isActive: boolean;
   };
   isCourseFull: boolean;
-  isInvitationOnly: boolean;
+  invitationOnly: boolean;
   canEnroll: boolean;
   isShibCourse: boolean;
   allowAnonymous: boolean;
   showCoursewareLink: boolean;
-  singlePaidMode: boolean;
+  singlePaidMode: {};
   ecommerceCheckout: boolean;
-  ecommerceCheckoutLink: string;
+  ecommerceCheckoutLink: string | null;
 }
 
 export interface CourseIntroTypes {
@@ -27,7 +27,7 @@ export interface StatusAlertTypes {
 }
 
 export interface EnrollmentButtonTypes {
-  singlePaidMode: boolean;
+  singlePaidMode: {};
   ecommerceCheckout: boolean;
   isEnrollmentPending: boolean;
   onEnroll: () => void;

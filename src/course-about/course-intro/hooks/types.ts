@@ -4,7 +4,7 @@ import { CourseAboutDataTypes } from '../types';
 
 export interface UseEnrollmentActionsTypes {
   courseId: string;
-  ecommerceCheckoutLink: string;
+  ecommerceCheckoutLink?: string | null;
 }
 
 export interface UseEnrollmentStatusTypes {

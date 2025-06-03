@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
-  render as rtlRender, renderHook, waitFor, within, cleanup,
+  render as rtlRender, renderHook, waitFor, within, cleanup, fireEvent, act,
 } from '@testing-library/react';
 import PropTypes from 'prop-types';
 import { MemoryRouter } from 'react-router-dom';
@@ -38,10 +38,12 @@ function render(ui) {
 }
 
 export {
+  act,
   render,
   renderHook,
   within,
   waitFor,
   userEvent,
+  fireEvent,
   cleanup,
 };

@@ -3,16 +3,15 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import { CourseIntroTypes } from './types';
 
-import { useEnrollmentActions } from './hooks/useEnrollmentActions';
-import { useEnrollmentStatus } from './hooks/useEnrollmentStatus';
+import { useEnrollmentActions, useEnrollmentStatus } from './hooks';
 
 export const CourseIntro = ({ courseAboutData }: CourseIntroTypes) => {
   const authenticatedUser = getAuthenticatedUser();
 
   const {
     id: courseId,
-    name: courseName,
     org: courseOrg,
+    name: courseName,
     shortDescription,
     ecommerceCheckoutLink,
   } = courseAboutData;
@@ -26,8 +25,8 @@ export const CourseIntro = ({ courseAboutData }: CourseIntroTypes) => {
 
   const { renderStatusContent } = useEnrollmentStatus({
     courseAboutData,
-    authenticatedUser,
     enrollmentError,
+    authenticatedUser,
     isEnrollmentPending,
     handleChangeEnrollment,
     handleEcommerceCheckout,

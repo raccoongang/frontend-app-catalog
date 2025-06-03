@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import {
   Icon, Image, useToggle, Button,
 } from '@openedx/paragon';
-import { PlayCircleFilledWhite } from '@openedx/paragon/icons';
+import { PlayCircleFilledWhite as PlayCircleFilledWhiteIcon } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -46,7 +46,11 @@ const CourseMedia: React.FC<CourseMediaTypes> = ({ courseAboutData }) => {
               aria-label={intl.formatMessage(messages.playCourseIntroductionVideo)}
             >
               {courseImage}
-              <Icon className="course-media-play-btn" src={PlayCircleFilledWhite} />
+              <Icon
+                className="course-media-play-btn"
+                data-testid="play-course-introduction-video-icon"
+                src={PlayCircleFilledWhiteIcon}
+              />
             </Button>
           </div>
         ) : courseImage}

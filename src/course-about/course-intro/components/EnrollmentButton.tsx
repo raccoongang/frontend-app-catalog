@@ -5,18 +5,17 @@ import messages from '../messages';
 import { EnrollmentButtonTypes } from '../types';
 
 export const EnrollmentButton = ({
+  onEnroll,
   singlePaidMode,
   ecommerceCheckout,
   isEnrollmentPending,
-  onEnroll,
   onEcommerceCheckout,
 }: EnrollmentButtonTypes) => {
   const intl = useIntl();
 
   return (
     <StatefulButton
-      as="a"
-      className={singlePaidMode ? 'add-to-cart' : 'register'}
+      variant={Object.entries(singlePaidMode).length > 0 ? 'outline-primary' : 'primary'}
       onClick={ecommerceCheckout ? onEcommerceCheckout : onEnroll}
       state={isEnrollmentPending ? 'pending' : 'default'}
       labels={{

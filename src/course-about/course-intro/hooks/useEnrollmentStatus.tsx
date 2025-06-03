@@ -1,17 +1,16 @@
 import { Button } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { EnrollmentButton } from '../status-components/EnrollmentButton';
-import { EnrolledStatus } from '../status-components/EnrolledStatus';
-import StatusAlert from '../status-components/StatusAlert';
+import { StatusAlert, EnrolledStatus, EnrollmentButton } from '../components';
 import { getLearningHomePageUrl } from '../utils';
 import messages from '../messages';
+import { ALERT_VARIANTS } from '../constants';
 import { UseEnrollmentStatusTypes } from './types';
 
 export const useEnrollmentStatus = ({
   courseAboutData,
-  authenticatedUser,
   enrollmentError,
+  authenticatedUser,
   isEnrollmentPending,
   handleChangeEnrollment,
   handleEcommerceCheckout,
@@ -19,20 +18,20 @@ export const useEnrollmentStatus = ({
   const intl = useIntl();
   const {
     id: courseId,
-    allowAnonymous,
-    isShibCourse,
     canEnroll,
     enrollment,
+    isShibCourse,
     isCourseFull,
-    isInvitationOnly,
-    showCoursewareLink,
+    allowAnonymous,
     singlePaidMode,
+    invitationOnly,
     ecommerceCheckout,
+    showCoursewareLink,
   } = courseAboutData;
 
   const renderStatusContent = () => {
     if (enrollmentError) {
-      return <StatusAlert variant="danger" messageKey="statusAlertEnrollmentError" />;
+      return <StatusAlert variant={ALERT_VARIANTS.DANGER} messageKey="statusAlertEnrollmentError" />;
     }
 
     if (authenticatedUser && enrollment.isActive) {
@@ -40,15 +39,15 @@ export const useEnrollmentStatus = ({
     }
 
     if (isCourseFull) {
-      return <StatusAlert variant="info" messageKey="statusAlertFull" />;
+      return <StatusAlert variant={ALERT_VARIANTS.INFO} messageKey="statusAlertFull" />;
     }
 
-    if (isInvitationOnly && !canEnroll) {
-      return <StatusAlert variant="info" messageKey="statusAlertEnrollmentInvitationOnly" />;
+    if (invitationOnly && !canEnroll) {
+      return <StatusAlert variant={ALERT_VARIANTS.INFO} messageKey="statusAlertEnrollmentInvitationOnly" />;
     }
 
     if (!isShibCourse && !canEnroll) {
-      return <StatusAlert variant="info" messageKey="statusAlertEnrollmentClosed" />;
+      return <StatusAlert variant={ALERT_VARIANTS.INFO} messageKey="statusAlertEnrollmentClosed" />;
     }
 
     if (allowAnonymous && showCoursewareLink) {

@@ -6,3 +6,9 @@ export interface UseEnrollmentParamsTypes {
 export interface EnrollmentFunctionTypes {
   (courseId: string, redirectUrl: string): Promise<void>;
 }
+
+export interface HttpError {
+  customAttributes?: {
+    httpErrorStatus?: number;
+  };
+}

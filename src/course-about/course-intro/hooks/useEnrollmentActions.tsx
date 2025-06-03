@@ -23,9 +23,9 @@ export const useEnrollmentActions = ({ courseId, ecommerceCheckoutLink }: UseEnr
     setIsEnrollmentPending(true);
     try {
       await enrollAndRedirect(courseId, `${getConfig().LMS_BASE_URL}/dashboard`);
-    } catch (errorMessage) {
+    } catch (error) {
       setIsEnrollmentPending(false);
-      logError('Failed to enroll in course', errorMessage);
+      logError('Failed to enroll in course', error);
     }
   };
 
@@ -34,7 +34,7 @@ export const useEnrollmentActions = ({ courseId, ecommerceCheckoutLink }: UseEnr
       logError('Ecommerce checkout link is not available');
       return;
     }
-    window.location.href = ecommerceCheckoutLink;
+    window.location.assign(ecommerceCheckoutLink);
   };
 
   return {
