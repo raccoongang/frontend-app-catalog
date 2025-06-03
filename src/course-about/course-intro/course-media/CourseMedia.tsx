@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, FC } from 'react';
 import {
   Icon, Image, useToggle, Button,
 } from '@openedx/paragon';
@@ -13,7 +13,7 @@ import messages from './messages';
 
 import courseImagePlaceholder from '../../../assets/images/no-course-image.jpg';
 
-const CourseMedia: React.FC<CourseMediaTypes> = ({ courseAboutData }) => {
+const CourseMedia: FC<CourseMediaTypes> = ({ courseAboutData }) => {
   const intl = useIntl();
   const [isOpenVideoModal, openVideoModal, closeVideoModal] = useToggle(false);
   const { imageUrl, videoUrl } = getMediaUris(courseAboutData);

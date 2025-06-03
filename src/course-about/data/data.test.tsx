@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getConfig } from '@edx/frontend-platform';
 
 import { renderHook, waitFor } from '../../setupTest';
-import { mockCourseAboutDataResponse } from '../../__mocks__';
+import { mockCourseAboutResponse } from '../../__mocks__';
 import { useCourseAboutData, useEnrollment } from './hooks';
 import { fetchCourseAboutData, changeCourseEnrolment } from './api';
 
@@ -12,10 +12,13 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 }));
 
 describe('Course About Data Layer', () => {
+  const courseId = 'course-v1:test+123+2024';
+  const redirectUrl = '/dashboard';
   const mockHttpClient = {
     get: jest.fn(),
     post: jest.fn(),
   };
+
   let originalLocation: Location;
   let queryClient: QueryClient;
 
@@ -52,17 +55,15 @@ describe('Course About Data Layer', () => {
 
   describe('API Functions', () => {
     it('fetchCourseAboutData should fetch and transform course data', async () => {
-      const courseId = 'course-v1:test+123+2024';
-      mockHttpClient.get.mockResolvedValueOnce({ data: mockCourseAboutDataResponse });
+      mockHttpClient.get.mockResolvedValueOnce({ data: mockCourseAboutResponse });
 
       const result = await fetchCourseAboutData(courseId);
 
       expect(mockHttpClient.get).toHaveBeenCalledWith(expect.stringContaining(courseId));
-      expect(result).toEqual(mockCourseAboutDataResponse);
+      expect(result).toEqual(mockCourseAboutResponse);
     });
 
     it('changeCourseEnrolment should make a POST request with correct data', async () => {
-      const courseId = 'course-v1:test+123+2024';
       const mockResponse = { data: { success: true } };
       mockHttpClient.post.mockResolvedValueOnce(mockResponse);
 
@@ -86,8 +87,7 @@ describe('Course About Data Layer', () => {
 
   describe('Hooks', () => {
     it('useCourseAboutData should fetch and return course data', async () => {
-      const courseId = 'course-v1:test+123+2024';
-      mockHttpClient.get.mockResolvedValueOnce({ data: mockCourseAboutDataResponse });
+      mockHttpClient.get.mockResolvedValueOnce({ data: mockCourseAboutResponse });
 
       const { result } = renderHookWithClient(() => useCourseAboutData(courseId));
 
@@ -97,12 +97,10 @@ describe('Course About Data Layer', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.data).toEqual(mockCourseAboutDataResponse);
+      expect(result.current.data).toEqual(mockCourseAboutResponse);
     });
 
     it('useEnrollment should handle successful enrollment', async () => {
-      const courseId = 'course-v1:test+123+2024';
-      const redirectUrl = '/dashboard';
       const onError = jest.fn();
       const errorMessage = 'Enrollment failed';
 
@@ -116,8 +114,6 @@ describe('Course About Data Layer', () => {
     });
 
     it('useEnrollment should handle 403 error and redirect to login', async () => {
-      const courseId = 'course-v1:test+123+2024';
-      const redirectUrl = '/dashboard';
       const onError = jest.fn();
       const errorMessage = 'Enrollment failed';
 
@@ -135,8 +131,6 @@ describe('Course About Data Layer', () => {
     });
 
     it('useEnrollment should handle other errors', async () => {
-      const courseId = 'course-v1:test+123+2024';
-      const redirectUrl = '/dashboard';
       const onError = jest.fn();
       const errorMessage = 'Enrollment failed';
 

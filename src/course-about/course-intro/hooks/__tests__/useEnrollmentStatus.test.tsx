@@ -1,10 +1,10 @@
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 
+import { cleanup, renderHook, render } from '../../../../setupTest';
 import { StatusAlert, EnrolledStatus, EnrollmentButton } from '../../components';
 import { ALERT_VARIANTS } from '../../constants';
 import { getLearningHomePageUrl } from '../../utils';
 import { useEnrollmentStatus } from '../useEnrollmentStatus';
-import { cleanup, renderHook, render } from '../../../../setupTest';
 
 jest.mock('../../components', () => ({
   StatusAlert: jest.fn(() => null),
@@ -63,7 +63,6 @@ describe('useEnrollmentStatus', () => {
       enrollmentError: 'Enrollment failed',
     }), { wrapper });
 
-    // Render the component returned by renderStatusContent
     render(result.current.renderStatusContent());
 
     expect(StatusAlert).toHaveBeenCalledWith(

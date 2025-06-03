@@ -1,7 +1,7 @@
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import { render } from '../../setupTest';
-import { mockCourseAboutDataResponse } from '../../__mocks__';
+import { mockCourseAboutResponse } from '../../__mocks__';
 import { useEnrollmentActions, useEnrollmentStatus } from './hooks';
 import { CourseIntro } from './CourseIntro';
 
@@ -28,31 +28,31 @@ describe('CourseIntro', () => {
   });
 
   it('renders course information correctly', () => {
-    const { getByText } = render(<CourseIntro courseAboutData={mockCourseAboutDataResponse} />);
+    const { getByText } = render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
 
-    expect(getByText(mockCourseAboutDataResponse.name)).toBeInTheDocument();
+    expect(getByText(mockCourseAboutResponse.name)).toBeInTheDocument();
 
-    expect(getByText(mockCourseAboutDataResponse.org)).toBeInTheDocument();
+    expect(getByText(mockCourseAboutResponse.org)).toBeInTheDocument();
 
-    expect(getByText(mockCourseAboutDataResponse.shortDescription)).toBeInTheDocument();
+    expect(getByText(mockCourseAboutResponse.shortDescription)).toBeInTheDocument();
   });
 
   it('renders status content from useEnrollmentStatus hook', () => {
-    const { getByTestId } = render(<CourseIntro courseAboutData={mockCourseAboutDataResponse} />);
+    const { getByTestId } = render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
 
     expect(getByTestId('status-content')).toBeInTheDocument();
   });
 
   it('passes correct props to enrollment hooks', () => {
-    render(<CourseIntro courseAboutData={mockCourseAboutDataResponse} />);
+    render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
 
     expect(useEnrollmentActions).toHaveBeenCalledWith({
-      courseId: mockCourseAboutDataResponse.id,
-      ecommerceCheckoutLink: mockCourseAboutDataResponse.ecommerceCheckoutLink,
+      courseId: mockCourseAboutResponse.id,
+      ecommerceCheckoutLink: mockCourseAboutResponse.ecommerceCheckoutLink,
     });
 
     expect(useEnrollmentStatus).toHaveBeenCalledWith({
-      courseAboutData: mockCourseAboutDataResponse,
+      courseAboutData: mockCourseAboutResponse,
       enrollmentError: null,
       authenticatedUser: null,
       isEnrollmentPending: false,
@@ -65,9 +65,8 @@ describe('CourseIntro', () => {
     const mockUser = { username: 'testuser' };
     (getAuthenticatedUser as jest.Mock).mockReturnValue(mockUser);
 
-    render(<CourseIntro courseAboutData={mockCourseAboutDataResponse} />);
+    render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
 
-    // Check if useEnrollmentStatus was called with authenticated user
     expect(useEnrollmentStatus).toHaveBeenCalledWith(
       expect.objectContaining({
         authenticatedUser: mockUser,
@@ -83,9 +82,8 @@ describe('CourseIntro', () => {
       handleEcommerceCheckout: jest.fn(),
     });
 
-    render(<CourseIntro courseAboutData={mockCourseAboutDataResponse} />);
+    render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
 
-    // Check if useEnrollmentStatus was called with error
     expect(useEnrollmentStatus).toHaveBeenCalledWith(
       expect.objectContaining({
         enrollmentError: 'Test error',

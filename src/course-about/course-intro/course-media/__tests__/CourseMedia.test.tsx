@@ -1,7 +1,6 @@
-import userEvent from '@testing-library/user-event';
 import { getConfig } from '@edx/frontend-platform';
 
-import { fireEvent, render } from '../../../../setupTest';
+import { fireEvent, userEvent, render } from '../../../../setupTest';
 import { extractYouTubeVideoId, getMediaUris } from '../utils';
 import CourseMedia from '../CourseMedia';
 import messages from '../messages';

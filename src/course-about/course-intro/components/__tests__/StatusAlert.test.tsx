@@ -1,8 +1,7 @@
 import { render, within } from '../../../../setupTest';
 import { ALERT_VARIANTS } from '../../constants';
-import { StatusAlert } from '../StatusAlert';
-
 import messages from '../../messages';
+import { StatusAlert } from '../StatusAlert';
 
 const renderStatusAlert = (variant: typeof ALERT_VARIANTS[keyof typeof ALERT_VARIANTS], messageKey: string) => render(
   <StatusAlert variant={variant} messageKey={messageKey} />,
@@ -13,7 +12,7 @@ describe('StatusAlert', () => {
     const { getByRole } = renderStatusAlert(ALERT_VARIANTS.SUCCESS, 'statusAlertEnrolled');
 
     const alert = getByRole('alert');
-    expect(alert).toHaveClass('alert-success');
+    expect(alert).toHaveClass(`alert-${ALERT_VARIANTS.SUCCESS}`);
     expect(within(alert).getByText(messages.statusAlertEnrolled.defaultMessage)).toBeInTheDocument();
   });
 
@@ -21,7 +20,7 @@ describe('StatusAlert', () => {
     const { getByRole } = renderStatusAlert(ALERT_VARIANTS.INFO, 'statusAlertFull');
 
     const alert = getByRole('alert');
-    expect(alert).toHaveClass('alert-info');
+    expect(alert).toHaveClass(`alert-${ALERT_VARIANTS.INFO}`);
     expect(within(alert).getByText(messages.statusAlertFull.defaultMessage)).toBeInTheDocument();
   });
 
@@ -29,7 +28,7 @@ describe('StatusAlert', () => {
     const { getByRole } = renderStatusAlert(ALERT_VARIANTS.DANGER, 'statusAlertEnrolled');
 
     const alert = getByRole('alert');
-    expect(alert).toHaveClass('alert-danger');
+    expect(alert).toHaveClass(`alert-${ALERT_VARIANTS.DANGER}`);
     expect(within(alert).getByText(messages.statusAlertEnrolled.defaultMessage)).toBeInTheDocument();
   });
 });

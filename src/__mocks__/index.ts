@@ -1,2 +1,2 @@
 export { mockCourseResponse } from './course';
-export { mockCourseAboutDataResponse } from './course-about';
+export { mockCourseAboutResponse } from './course-about';

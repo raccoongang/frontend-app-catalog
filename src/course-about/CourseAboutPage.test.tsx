@@ -1,6 +1,6 @@
 import { render, waitFor } from '../setupTest';
 import { useCourseAboutData } from './data/hooks';
-import { mockCourseAboutDataResponse } from '../__mocks__';
+import { mockCourseAboutResponse } from '../__mocks__';
 import CourseAboutPage from './CourseAboutPage';
 
 jest.mock('./data/hooks', () => ({
@@ -36,15 +36,15 @@ describe('CourseAboutPage', () => {
     mockCourseAboutData.mockReturnValue({
       isLoading: false,
       isError: false,
-      data: mockCourseAboutDataResponse,
+      data: mockCourseAboutResponse,
     });
 
     const { getByText } = render(<CourseAboutPage />);
 
     await waitFor(() => {
-      expect(getByText(mockCourseAboutDataResponse.name)).toBeInTheDocument();
-      expect(getByText(mockCourseAboutDataResponse.org)).toBeInTheDocument();
-      expect(getByText(mockCourseAboutDataResponse.shortDescription)).toBeInTheDocument();
+      expect(getByText(mockCourseAboutResponse.name)).toBeInTheDocument();
+      expect(getByText(mockCourseAboutResponse.org)).toBeInTheDocument();
+      expect(getByText(mockCourseAboutResponse.shortDescription)).toBeInTheDocument();
     });
   });
 });

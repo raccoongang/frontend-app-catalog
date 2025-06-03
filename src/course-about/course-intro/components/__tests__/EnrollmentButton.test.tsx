@@ -1,6 +1,4 @@
-import userEvent from '@testing-library/user-event';
-
-import { render } from '../../../../setupTest';
+import { render, userEvent } from '../../../../setupTest';
 import messages from '../../messages';
 import { EnrollmentButton } from '../EnrollmentButton';
 

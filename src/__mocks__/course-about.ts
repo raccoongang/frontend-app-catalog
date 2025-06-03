@@ -1,4 +1,4 @@
-export const mockCourseAboutDataResponse = {
+export const mockCourseAboutResponse = {
   accessExpiration: null,
   contentTypeGatingEnabled: false,
   courseGoals: {
