@@ -57,7 +57,7 @@ const CourseAboutPage = () => {
         </Layout.Element>
         <Layout.Element>
           <aside>
-            <CourseSidebar />
+            <CourseSidebar courseAboutData={courseAboutData} />
           </aside>
         </Layout.Element>
       </Layout>

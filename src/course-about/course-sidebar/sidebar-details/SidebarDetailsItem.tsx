@@ -1,11 +1,6 @@
-import type { ComponentType } from 'react';
 import { Icon, Stack } from '@openedx/paragon';
 
-interface SidebarDetailsItemProps {
-  icon: ComponentType<{ className?: string }>;
-  label: string;
-  value: string;
-}
+import type { SidebarDetailsItemProps } from './types';
 
 const SidebarDetailsItem = ({
   icon,

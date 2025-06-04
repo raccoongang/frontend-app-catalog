@@ -3,11 +3,11 @@ import { Card } from '@openedx/paragon';
 import SidebarSocial from './SidebarSocial';
 import SidebarDetails from './sidebar-details/SidebarDetails';
 
-const CourseSidebar = () => (
+const CourseSidebar = ({ courseAboutData }) => (
   <Card>
     <Card.Section>
-      <SidebarSocial />
-      <SidebarDetails />
+      <SidebarSocial courseAboutData={courseAboutData} />
+      <SidebarDetails courseAboutData={courseAboutData} />
     </Card.Section>
   </Card>
 );
