@@ -2,11 +2,7 @@ import { Icon, Stack } from '@openedx/paragon';
 
 import type { SidebarDetailsItemProps } from './types';
 
-const SidebarDetailsItem = ({
-  icon,
-  label,
-  value,
-}: SidebarDetailsItemProps) => (
+const SidebarDetailsItem = ({ icon, label, value }: SidebarDetailsItemProps) => (
   <Stack className="course-sidebar-course-details justify-content-between" direction="horizontal" gap={2}>
     <Stack direction="horizontal" gap={2}>
       <Icon src={icon} />

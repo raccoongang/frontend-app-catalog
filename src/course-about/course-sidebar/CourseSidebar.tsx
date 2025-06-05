@@ -1,6 +1,6 @@
 import { Card } from '@openedx/paragon';
 
-import SidebarSocial from './SidebarSocial';
+import SidebarSocial from './sidebar-social/SidebarSocial';
 import SidebarDetails from './sidebar-details/SidebarDetails';
 
 const CourseSidebar = ({ courseAboutData }) => (

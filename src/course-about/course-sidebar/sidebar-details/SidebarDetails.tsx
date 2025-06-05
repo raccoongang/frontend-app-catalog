@@ -1,123 +1,52 @@
 import { Stack } from '@openedx/paragon';
-import {
-  CalendarMonth as CalendarMonthIcon,
-  Info as InfoIcon,
-  AccessTimeFilled as AccessTimeFilledIcon,
-  MoneyFilled as MoneyFilledIcon,
-} from '@openedx/paragon/icons';
+import { Info as InfoIcon } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { formatDate } from '../../../utils';
 import SidebarDetailsItem from './SidebarDetailsItem';
+import { SidebarDetailsProps } from './types';
+import { getSidebarDetails } from './utils';
+import messages from './messages';
 
-const ENABLE_COSMETIC_DISPLAY_PRICE = true;
+const SidebarDetails = ({ courseAboutData }: SidebarDetailsProps) => {
+  const intl = useIntl();
 
-const SidebarDetails = ({ courseAboutData }) => {
-  const renderSidebarDetails = () => {
-    const details: JSX.Element[] = [];
+  const renderPrerequisites = () => {
+    if (!courseAboutData.preRequisiteCourses.length) { return null; }
 
-    details.push(
-      <SidebarDetailsItem
-        key="effort"
-        icon={AccessTimeFilledIcon}
-        label="Course number"
-        value={courseAboutData.displayNumberWithDefault}
-      />,
-    );
+    const prerequisite = courseAboutData.preRequisiteCourses[0];
+    const prerequisiteUrl = `${getConfig().LMS_BASE_URL}/courses/${prerequisite.key}/about`;
 
-    if (!courseAboutData.startDateIsStillDefault) {
-      const courseStartDate = courseAboutData.advertisedStart || courseAboutData.start;
-      details.push(
+    return (
+      <>
         <SidebarDetailsItem
-          key="start-date"
-          icon={CalendarMonthIcon}
-          label="Classes start"
-          value={formatDate(courseStartDate)}
-        />,
-      );
-    }
-
-    if (courseAboutData.end) {
-      const courseEndDate = courseAboutData.end;
-      details.push(
-        <SidebarDetailsItem
-          key="end-date"
-          icon={CalendarMonthIcon}
-          label="Classes end"
-          value={formatDate(courseEndDate)}
-        />,
-      );
-    }
-
-    if (courseAboutData.effort) {
-      details.push(
-        <SidebarDetailsItem
-          key="effort"
-          icon={AccessTimeFilledIcon}
-          label="Estimated effort"
-          value={courseAboutData.effort}
-        />,
-      );
-    }
-
-    if (courseAboutData.coursePrice && ENABLE_COSMETIC_DISPLAY_PRICE) {
-      details.push(
-        <SidebarDetailsItem
-          key="price"
-          icon={MoneyFilledIcon}
-          label="Price"
-          value={courseAboutData.coursePrice}
-        />,
-      );
-    }
-
-    if (courseAboutData.preRequisiteCourses.length) {
-      details.push(
-        <>
-          <SidebarDetailsItem
-            key="prerequisites"
-            icon={InfoIcon}
-            label="Prerequisites"
-            value={(
-              <a
-                href={`${getConfig().LMS_BASE_URL}/courses/${courseAboutData.preRequisiteCourses[0].key}/about`}
-              >
-                {courseAboutData.preRequisiteCourses[0].display}
-              </a>
-            )}
-          />
-          <p>
-            You must successfully complete
-            {' '}
-            <a
-              href={`${getConfig().LMS_BASE_URL}/courses/${courseAboutData.preRequisiteCourses[0].key}/about`}
-            >
-              {courseAboutData.preRequisiteCourses[0].display}
-            </a>
-            {' '}
-            before you begin this course.
-          </p>
-        </>,
-      );
-    }
-
-    if (courseAboutData?.requirements) {
-      details.push(
-        <SidebarDetailsItem
-          key="requirements"
+          key="prerequisites"
           icon={InfoIcon}
-          label="Requirements"
-          value={courseAboutData.requirements}
-        />,
-      );
-    }
-
-    return details;
+          label={intl.formatMessage(messages.prerequisites)}
+          value={<a href={prerequisiteUrl}>{prerequisite.display}</a>}
+        />
+        <p>
+          You must successfully complete{' '}
+          <a href={prerequisiteUrl}>{prerequisite.display}</a>
+          {' '}before you begin this course.
+        </p>
+      </>
+    );
   };
 
   return (
     <Stack direction="vertical" gap={3}>
-      {renderSidebarDetails()}
+      {getSidebarDetails(intl, courseAboutData)
+        .filter(detail => detail.show)
+        .map(detail => (
+          <SidebarDetailsItem
+            key={detail.key}
+            icon={detail.icon}
+            label={detail.label}
+            value={detail.value}
+          />
+        ))}
+      {renderPrerequisites()}
     </Stack>
   );
 };
