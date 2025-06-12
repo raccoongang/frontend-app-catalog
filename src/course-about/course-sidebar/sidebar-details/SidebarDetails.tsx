@@ -1,5 +1,5 @@
 import { Stack } from '@openedx/paragon';
-import { Info as InfoIcon } from '@openedx/paragon/icons';
+import { ListView as ListViewIcon } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -21,21 +21,21 @@ const SidebarDetails = ({ courseAboutData }: SidebarDetailsProps) => {
       <>
         <SidebarDetailsItem
           key="prerequisites"
-          icon={InfoIcon}
+          icon={ListViewIcon}
           label={intl.formatMessage(messages.prerequisites)}
           value={<a href={prerequisiteUrl}>{prerequisite.display}</a>}
         />
-        <p>
-          You must successfully complete{' '}
-          <a href={prerequisiteUrl}>{prerequisite.display}</a>
-          {' '}before you begin this course.
+        <p className="course-sidebar-course-details-prerequisites m-0 mb-3 border-bottom-0 border-top-0">
+          {intl.formatMessage(messages.prerequisitesCompletion, {
+            prerequisite: <a href={prerequisiteUrl}>{prerequisite.display}</a>,
+          })}
         </p>
       </>
     );
   };
 
   return (
-    <Stack direction="vertical" gap={3}>
+    <Stack direction="vertical">
       {getSidebarDetails(intl, courseAboutData)
         .filter(detail => detail.show)
         .map(detail => (

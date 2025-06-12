@@ -32,7 +32,7 @@ const SidebarSocial = ({ courseAboutData }: { courseAboutData: CourseAboutData }
     >
       <header>
         <Stack
-          className="course-sidebar-social-icons justify-content-center"
+          className="course-sidebar-social-icons justify-content-center my-3"
           direction="horizontal"
           gap={4}
           aria-label={intl.formatMessage(messages.socialSharingOptionsAriaLabel)}

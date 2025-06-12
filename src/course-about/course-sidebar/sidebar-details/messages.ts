@@ -36,6 +36,11 @@ const messages = defineMessages({
     defaultMessage: 'Prerequisites',
     description: 'Prerequisites label',
   },
+  prerequisitesCompletion: {
+    id: 'catalog.course-about.sidebar-details.prerequisites-completion',
+    defaultMessage: 'You must successfully complete {prerequisite} before you begin this course.',
+    description: 'Text explaining that a prerequisite course must be completed',
+  },
 });
 
 export default messages;

@@ -1,8 +1,20 @@
-.course-sidebar-social-icons {
-  margin-bottom: 20px;
+.course-sidebar {
+  .course-sidebar-social-icons .course-sidebar-social-icon {
+    height: 2rem;
+    width: 2rem;
+  }
 
-  .course-sidebar-social-icon {
-    height: 28px;
-    width: 27px;
+  .course-sidebar-course-details {
+    border-top: 1px solid var(--pgn-color-gray-100);
+    border-bottom: 1px solid var(--pgn-color-gray-100);
+    padding: var(--pgn-spacing-spacer-base) 1.125rem;
+
+    .course-sidebar-course-details-value {
+      color: var(--pgn-color-black);
+    }
+  }
+
+  .course-sidebar-course-details-prerequisites {
+    padding: 0 1.125rem;
   }
 }
