@@ -40,3 +40,9 @@
     }
   }
 }
+
+.course-about-overview {
+  box-shadow: var(--pgn-elevation-box-shadow-down-1);
+  border-radius: calc(var(--pgn-size-card-border-radius-base) - var(--pgn-size-card-border-width));
+  padding: var(--pgn-spacing-spacer-4);
+}
