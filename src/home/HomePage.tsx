@@ -3,9 +3,10 @@ import { ErrorPage } from '@edx/frontend-platform/react';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { Loading } from '../generic';
+import HomeBannerSlot from '../plugin-slots/HomeBannerSlot/HomeBannerSlot';
+import HomeCoursesListSlot from '../plugin-slots/HomeCoursesListSlot/HomeCoursesListSlot';
 import { useFrontendParams } from '../data/frontend-params';
-import { HomeBanner, CoursesList } from './components';
+import { Loading } from '../generic';
 import messages from './messages';
 
 const HomePage = () => {
@@ -41,13 +42,13 @@ const HomePage = () => {
 
   return (
     <>
-      <HomeBanner
+      <HomeBannerSlot
         homepageOverlayHtml={homepageOverlayHtml || ''}
         showHomepagePromoVideo={showHomepagePromoVideo}
         homepagePromoVideoYoutubeId={homepagePromoVideoYoutubeId}
         enableCourseDiscovery={enableCourseDiscovery}
       />
-      <CoursesList />
+      <HomeCoursesListSlot />
     </>
   );
 };

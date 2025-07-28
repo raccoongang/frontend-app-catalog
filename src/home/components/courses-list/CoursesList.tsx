@@ -7,8 +7,9 @@ import { getConfig } from '@edx/frontend-platform';
 import { useNavigate } from 'react-router';
 
 import { useCourseDiscovery } from '@src/data/course-discovery/hooks';
-import { AlertNotification, CourseCard, Loading } from '@src/generic';
+import { AlertNotification, Loading } from '@src/generic';
 import { DEFAULT_PAGE_INDEX } from '@src/data/course-discovery/constants';
+import CourseCardSlot from '@src/plugin-slots/HomeCourseCardSlot/HomeCourseCardSlot';
 import { ROUTES } from '@src/routes';
 import { useFrontendParamsQuery } from '@src/data/frontend-params/hooks';
 import { DEFAULT_COURSES_COUNT } from '../../constants';
@@ -82,10 +83,7 @@ const CoursesList = () => {
             className="w-100"
           >
             {courseData?.results?.map(course => (
-              <CourseCard
-                key={course.id}
-                course={course}
-              />
+              <CourseCardSlot key={course.id} course={course} />
             ))}
           </CardGrid>
           {courseData?.total > maxCourses && (
