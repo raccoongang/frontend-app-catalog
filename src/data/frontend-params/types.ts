@@ -8,6 +8,7 @@ export interface FrontendParamsResponse {
   enableCourseSortingByStartDate: boolean,
   showPartners: boolean,
   homepageCourseMax: number,
+  coursesAreBrowsable: boolean,
 }
 
 export interface FrontendParamsContextType {

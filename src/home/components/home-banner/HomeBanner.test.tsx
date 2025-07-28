@@ -1,8 +1,6 @@
-import * as reactRouter from 'react-router';
-
 import { ROUTES } from '@src/routes';
 import {
-  render, userEvent, cleanup, screen,
+  render, userEvent, cleanup, screen, reactRouter,
 } from '@src/setupTest';
 import { mockFrontendParamsResponse } from '@src/__mocks__';
 import HomeBanner from './HomeBanner';
@@ -11,7 +9,7 @@ import messages from './messages';
 
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(() => ({
-    SITE_NAME: 'My Site',
+    SITE_NAME: process.env.SITE_NAME,
   })),
   ensureConfig: jest.fn(),
 }));
@@ -25,7 +23,7 @@ describe('<HomeBanner />', () => {
   it('renders title and subtitle', () => {
     render(<HomeBanner {...mockFrontendParamsResponse} />);
 
-    expect(screen.getByText(messages.title.defaultMessage.replace('{siteName}', 'My Site'))).toBeInTheDocument();
+    expect(screen.getByText(messages.title.defaultMessage.replace('{siteName}', process.env.SITE_NAME))).toBeInTheDocument();
     expect(screen.getByText(messages.subtitle.defaultMessage)).toBeInTheDocument();
   });
 

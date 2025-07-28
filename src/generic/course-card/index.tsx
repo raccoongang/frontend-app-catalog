@@ -30,7 +30,8 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <Card.ImageCap
         src={getFullImageUrl(course.data.imageUrl)}
         fallbackSrc={noCourseImg}
-        srcAlt={course.data.content.displayName}
+        srcAlt={`${course.data.content.displayName} ${course.data.number}`}
+        // TODO: Check orgImg field (and add orgImg for course discovery API)
         logoSrc={course.data.orgImg ? getFullImageUrl(course.data.orgImg) : undefined}
         fallbackLogoSrc={!course.data.orgImg && noOrgImg}
         logoAlt={course.data.org}
@@ -38,6 +39,8 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <Card.Section>
         <h3 className="m-0">{course.data.content.displayName}</h3>
         <p className="m-0">{course.data.org}</p>
+        <p className="m-0">{course.data.number}</p>
+        {/* TODO: Add advertised_start field */}
         {formattedDate && (
           <span>
             {intl.formatMessage(messages.startDate, {

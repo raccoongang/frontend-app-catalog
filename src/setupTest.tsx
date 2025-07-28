@@ -12,6 +12,8 @@ import userEvent from '@testing-library/user-event';
 import PropTypes from 'prop-types';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import * as reactRouter from 'react-router';
+
 import { FrontendParamsProvider } from './data/frontend-params';
 
 function render(ui) {
@@ -52,4 +54,5 @@ export {
   screen,
   userEvent,
   cleanup,
+  reactRouter,
 };

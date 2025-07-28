@@ -5,7 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { Loading } from '../generic';
 import { useFrontendParams } from '../data/frontend-params';
-import HomeBanner from './components/home-banner/HomeBanner';
+import { HomeBanner, CoursesList } from './components';
 import messages from './messages';
 
 const HomePage = () => {
@@ -40,12 +40,15 @@ const HomePage = () => {
   }
 
   return (
-    <HomeBanner
-      homepageOverlayHtml={homepageOverlayHtml || ''}
-      showHomepagePromoVideo={showHomepagePromoVideo}
-      homepagePromoVideoYoutubeId={homepagePromoVideoYoutubeId}
-      enableCourseDiscovery={enableCourseDiscovery}
-    />
+    <>
+      <HomeBanner
+        homepageOverlayHtml={homepageOverlayHtml || ''}
+        showHomepagePromoVideo={showHomepagePromoVideo}
+        homepagePromoVideoYoutubeId={homepagePromoVideoYoutubeId}
+        enableCourseDiscovery={enableCourseDiscovery}
+      />
+      <CoursesList />
+    </>
   );
 };
 
