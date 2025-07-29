@@ -1,7 +1,8 @@
 import { getConfig } from '@edx/frontend-platform';
 
-import { mockCourseResponse } from '../../__mocks__';
-import { render, screen } from '../../setupTest';
+import { ROUTES } from '@src/routes';
+import { mockCourseResponse } from '@src/__mocks__';
+import { render, screen } from '@src/setupTest';
 import { CourseCard } from '.';
 
 import messages from './messages';
@@ -38,7 +39,7 @@ describe('CourseCard', () => {
     renderComponent();
 
     const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', `/courses/${mockCourseResponse.id}/about`);
+    expect(link).toHaveAttribute('href', ROUTES.COURSE_ABOUT.replace(':courseId', mockCourseResponse.id));
   });
 
   it('handles missing start date gracefully', () => {

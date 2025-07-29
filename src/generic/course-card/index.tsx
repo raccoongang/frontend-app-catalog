@@ -5,6 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import noCourseImg from '@src/assets/images/no-course-image.svg';
 import noOrgImg from '@src/assets/images/no-org-image.svg';
 
+import { ROUTES } from '@src/routes';
 import { CourseCardProps } from './types';
 import messages from './messages';
 import { getFullImageUrl } from './utils';
@@ -23,7 +24,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   return (
     <Card
       as={Link}
-      to={`/courses/${course.id}/about`}
+      to={ROUTES.COURSE_ABOUT.replace(':courseId', course.id)}
       className={`course-card ${isExtraSmall ? 'w-100' : 'course-card-desktop'}`}
       isClickable
     >

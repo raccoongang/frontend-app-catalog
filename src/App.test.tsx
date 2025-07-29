@@ -24,6 +24,10 @@ jest.mock('./data/course-discovery/hooks', () => ({
   useCourseDiscovery: jest.fn(),
 }));
 
+jest.mock('./header/hooks/useMenuItems', () => ({
+  useMenuItems: jest.fn(() => ([])),
+}));
+
 const mockFrontendParams = useFrontendParams as jest.Mock;
 const mockCourseDiscovery = useCourseDiscovery as jest.Mock;
 
