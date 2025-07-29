@@ -9,7 +9,7 @@ export const CourseIntro = ({ courseAboutData }: CourseIntroTypes) => {
 
   const {
     id: courseId,
-    org: courseOrg,
+    displayOrgWithDefault: courseOrg,
     name: courseName,
     shortDescription,
     ecommerceCheckoutLink,

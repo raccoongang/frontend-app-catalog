@@ -1,7 +1,7 @@
 export interface CourseAboutDataTypes {
   id: string;
   name: string;
-  org: string;
+  displayOrgWithDefault: string;
   shortDescription: string;
   enrollment: {
     isActive: boolean;
