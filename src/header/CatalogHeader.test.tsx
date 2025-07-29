@@ -1,7 +1,7 @@
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { AppContext } from '@edx/frontend-platform/react';
 
-import { render } from '../setupTest';
+import { render, screen } from '../setupTest';
 import { ROUTES } from '../routes';
 import CatalogHeader from './CatalogHeader';
 import { useMenuItems } from './hooks/useMenuItems';
@@ -58,18 +58,18 @@ describe('CatalogHeader', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('renders header with correct props', () => {
-    const { getByTestId } = render(<CatalogHeader />);
+    render(<CatalogHeader />);
 
-    expect(getByTestId('header')).toBeInTheDocument();
-    expect(getByTestId('main-menu')).toHaveTextContent(JSON.stringify(mockMenuItems.mainMenu));
-    expect(getByTestId('secondary-menu')).toHaveTextContent(JSON.stringify(mockMenuItems.secondaryMenu));
-    expect(getByTestId('logo-destination')).toHaveTextContent(getConfig().LMS_BASE_URL);
+    expect(screen.getByTestId('header')).toBeInTheDocument();
+    expect(screen.getByTestId('main-menu')).toHaveTextContent(JSON.stringify(mockMenuItems.mainMenu));
+    expect(screen.getByTestId('secondary-menu')).toHaveTextContent(JSON.stringify(mockMenuItems.secondaryMenu));
+    expect(screen.getByTestId('logo-destination')).toHaveTextContent(getConfig().LMS_BASE_URL);
   });
 
   it('should display Help link if SUPPORT_URL is set', () => {
     mergeConfig({ SUPPORT_URL: getConfig().SUPPORT_URL });
-    const { getByTestId } = render(<CatalogHeader />);
-    const secondaryMenuText = getByTestId('secondary-menu').textContent;
+    render(<CatalogHeader />);
+    const secondaryMenuText = screen.getByTestId('secondary-menu').textContent;
     const secondaryMenu = secondaryMenuText ? JSON.parse(secondaryMenuText) : [];
 
     expect(secondaryMenu).toHaveLength(1);
@@ -90,8 +90,8 @@ describe('CatalogHeader', () => {
     };
     (useMenuItems as jest.Mock).mockReturnValue(mockMenuItemsWithPrograms);
 
-    const { getByTestId } = render(<CatalogHeader />);
-    const mainMenuText = getByTestId('main-menu').textContent;
+    render(<CatalogHeader />);
+    const mainMenuText = screen.getByTestId('main-menu').textContent;
     const mainMenu = mainMenuText ? JSON.parse(mainMenuText) : [];
 
     expect(mainMenu).toContainEqual(
@@ -108,8 +108,8 @@ describe('CatalogHeader', () => {
     };
     (useMenuItems as jest.Mock).mockReturnValue(mockMenuItemsWithoutDiscovery);
 
-    const { getByTestId } = render(<CatalogHeader />);
-    const mainMenuText = getByTestId('main-menu').textContent;
+    render(<CatalogHeader />);
+    const mainMenuText = screen.getByTestId('main-menu').textContent;
     const mainMenu = mainMenuText ? JSON.parse(mainMenuText) : [];
 
     expect(mainMenu).not.toContainEqual(
@@ -127,8 +127,8 @@ describe('CatalogHeader', () => {
     };
     (useMenuItems as jest.Mock).mockReturnValue(mockMenuItemsWithoutHelp);
 
-    const { getByTestId } = render(<CatalogHeader />);
-    const secondaryMenuText = getByTestId('secondary-menu').textContent;
+    render(<CatalogHeader />);
+    const secondaryMenuText = screen.getByTestId('secondary-menu').textContent;
     const secondaryMenu = secondaryMenuText ? JSON.parse(secondaryMenuText) : [];
 
     expect(secondaryMenu).toHaveLength(0);
@@ -148,8 +148,8 @@ describe('CatalogHeader', () => {
     };
     (useMenuItems as jest.Mock).mockReturnValue(mockMenuItemsWithActive);
 
-    const { getByTestId } = render(<CatalogHeader />);
-    const mainMenuText = getByTestId('main-menu').textContent;
+    render(<CatalogHeader />);
+    const mainMenuText = screen.getByTestId('main-menu').textContent;
     const mainMenu = mainMenuText ? JSON.parse(mainMenuText) : [];
 
     expect(mainMenu[0].isActive).toBe(true);
@@ -163,9 +163,9 @@ describe('CatalogHeader', () => {
     };
     (useMenuItems as jest.Mock).mockReturnValue(mockEmptyMenuItems);
 
-    const { getByTestId } = render(<CatalogHeader />);
-    const mainMenuText = getByTestId('main-menu').textContent;
-    const secondaryMenuText = getByTestId('secondary-menu').textContent;
+    render(<CatalogHeader />);
+    const mainMenuText = screen.getByTestId('main-menu').textContent;
+    const secondaryMenuText = screen.getByTestId('secondary-menu').textContent;
     const mainMenu = mainMenuText ? JSON.parse(mainMenuText) : [];
     const secondaryMenu = secondaryMenuText ? JSON.parse(secondaryMenuText) : [];
 
@@ -189,8 +189,8 @@ describe('CatalogHeader', () => {
     (useMenuItems as jest.Mock).mockReturnValue(mockMenuItemsWithExploreCourses);
     mergeConfig({ ENABLE_COURSE_DISCOVERY: true });
 
-    const { getByTestId } = render(<CatalogHeader />);
-    const mainMenuText = getByTestId('main-menu').textContent;
+    render(<CatalogHeader />);
+    const mainMenuText = screen.getByTestId('main-menu').textContent;
     const mainMenu = mainMenuText ? JSON.parse(mainMenuText) : [];
 
     expect(mainMenu).toContainEqual(
@@ -232,13 +232,13 @@ describe('CatalogHeader', () => {
     };
     (useMenuItems as jest.Mock).mockReturnValue(mockMenuItemsForAuth);
 
-    const { getByTestId } = render(
+    render(
       <AppContext.Provider value={{ authenticatedUser }}>
         <CatalogHeader />
       </AppContext.Provider>,
     );
 
-    const mainMenuText = getByTestId('main-menu').textContent;
+    const mainMenuText = screen.getByTestId('main-menu').textContent;
     const mainMenu = mainMenuText ? JSON.parse(mainMenuText) : [];
 
     expect(mainMenu).toHaveLength(3);
@@ -268,13 +268,13 @@ describe('CatalogHeader', () => {
     };
     (useMenuItems as jest.Mock).mockReturnValue(mockMenuItemsForNonAuth);
 
-    const { getByTestId } = render(
+    render(
       <AppContext.Provider value={{ authenticatedUser: null }}>
         <CatalogHeader />
       </AppContext.Provider>,
     );
 
-    const mainMenuText = getByTestId('main-menu').textContent;
+    const mainMenuText = screen.getByTestId('main-menu').textContent;
     const mainMenu = mainMenuText ? JSON.parse(mainMenuText) : [];
 
     expect(mainMenu).toHaveLength(1);
