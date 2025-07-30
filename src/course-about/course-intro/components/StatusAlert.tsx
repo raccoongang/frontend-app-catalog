@@ -3,8 +3,8 @@ import { Alert } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import messages from '../messages';
-import { StatusAlertTypes } from '../types';
 import { ALERT_ICONS, ALERT_VARIANTS } from '../constants';
+import { StatusAlertTypes } from './types';
 
 export const StatusAlert = ({ variant, messageKey }: StatusAlertTypes) => {
   const intl = useIntl();

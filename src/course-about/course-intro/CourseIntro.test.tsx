@@ -4,6 +4,7 @@ import { render, screen } from '@src/setupTest';
 import { mockCourseAboutResponse } from '@src/__mocks__';
 import { useEnrollmentActions, useEnrollmentStatus } from './hooks';
 import { CourseIntro } from './CourseIntro';
+import messages from './messages';
 
 jest.mock('./hooks', () => ({
   useEnrollmentActions: jest.fn(() => ({
@@ -76,7 +77,7 @@ describe('CourseIntro', () => {
 
   it('renders with error state', () => {
     (useEnrollmentActions as jest.Mock).mockReturnValue({
-      enrollmentError: 'Test error',
+      enrollmentError: messages.statusAlertEnrollmentError.defaultMessage,
       isEnrollmentPending: false,
       handleChangeEnrollment: jest.fn(),
       handleEcommerceCheckout: jest.fn(),
@@ -86,7 +87,7 @@ describe('CourseIntro', () => {
 
     expect(useEnrollmentStatus).toHaveBeenCalledWith(
       expect.objectContaining({
-        enrollmentError: 'Test error',
+        enrollmentError: messages.statusAlertEnrollmentError.defaultMessage,
       }),
     );
   });

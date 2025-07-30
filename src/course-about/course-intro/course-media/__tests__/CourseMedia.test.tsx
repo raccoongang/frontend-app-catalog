@@ -5,48 +5,26 @@ import courseImagePlaceholder from '@src/assets/images/no-course-image.svg';
 import {
   fireEvent, userEvent, render, screen,
 } from '@src/setupTest';
-import { extractYouTubeVideoId, getMediaUris } from '../utils';
+import { mockCourseAboutResponse } from '@src/__mocks__';
 import CourseMedia from '../CourseMedia';
 import messages from '../messages';
 
-jest.mock('@edx/frontend-platform', () => ({
-  getConfig: jest.fn(),
-}));
-
-jest.mock('../utils', () => ({
-  extractYouTubeVideoId: jest.fn(),
-  getMediaUris: jest.fn(),
-}));
-
 describe('CourseMedia', () => {
   const mockCourseData = {
-    name: 'Test Course',
-    media: {
-      courseImage: { uri: '/test-image.jpg' },
-      courseVideo: { uri: 'https://youtube.com/watch?v=test123' },
-    },
+    name: mockCourseAboutResponse.name,
+    media: mockCourseAboutResponse.media,
   };
 
   const defaultProps = {
     courseAboutData: mockCourseData,
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    (getConfig as jest.Mock).mockReturnValue({ LMS_BASE_URL: 'http://test-lms.com' });
-    (getMediaUris as jest.Mock).mockReturnValue({
-      imageUrl: '/test-image.jpg',
-      videoUrl: 'https://youtube.com/watch?v=test123',
-    });
-    (extractYouTubeVideoId as jest.Mock).mockReturnValue('test123');
-  });
-
   it('renders course image with correct attributes', () => {
     render(<CourseMedia {...defaultProps} />);
 
     const image = screen.getByAltText(mockCourseData.name);
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', 'http://test-lms.com/test-image.jpg');
+    expect(image).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${mockCourseAboutResponse.media.courseImage.uri}`);
     expect(image).toHaveClass('course-media-image');
   });
 
@@ -61,13 +39,15 @@ describe('CourseMedia', () => {
   });
 
   it('renders only image when no video is available', () => {
-    (getMediaUris as jest.Mock).mockReturnValue({
-      imageUrl: '/test-image.jpg',
-      videoUrl: null,
-    });
-    (extractYouTubeVideoId as jest.Mock).mockReturnValue(null);
+    const courseDataWithoutVideo = {
+      ...mockCourseData,
+      media: {
+        ...mockCourseData.media,
+        courseVideo: undefined,
+      },
+    };
 
-    render(<CourseMedia {...defaultProps} />);
+    render(<CourseMedia courseAboutData={courseDataWithoutVideo} />);
 
     expect(screen.getByAltText(mockCourseData.name)).toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
@@ -96,12 +76,17 @@ describe('CourseMedia', () => {
   });
 
   it('uses placeholder image when no image URL is provided', () => {
-    (getMediaUris as jest.Mock).mockReturnValue({
-      imageUrl: null,
-      videoUrl: null,
-    });
+    const courseDataWithoutImage = {
+      ...mockCourseData,
+      media: {
+        ...mockCourseData.media,
+        courseImage: {
+          uri: null,
+        },
+      },
+    };
 
-    render(<CourseMedia {...defaultProps} />);
+    render(<CourseMedia courseAboutData={courseDataWithoutImage} />);
 
     const image = screen.getByAltText(mockCourseData.name);
     expect(image).toHaveAttribute('src', courseImagePlaceholder);
@@ -118,6 +103,6 @@ describe('CourseMedia', () => {
     render(<CourseMedia {...defaultProps} />);
 
     const image = screen.getByAltText(mockCourseData.name);
-    expect(image).toHaveAttribute('src', 'http://test-lms.com/test-image.jpg');
+    expect(image).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${mockCourseAboutResponse.media.courseImage.uri}`);
   });
 });

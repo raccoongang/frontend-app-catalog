@@ -1,8 +1,10 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 
 import { renderHook, act } from '@src/setupTest';
 import { useEnrollment } from '@src/course-about/data/hooks';
+import { mockCourseAboutResponse } from '@src/__mocks__';
 import { useEnrollmentActions } from '../useEnrollmentActions';
 import { UseEnrollmentActionsTypes } from '../types';
 
@@ -26,8 +28,6 @@ const renderHookWithWrapper = (props: UseEnrollmentActionsTypes) => renderHook(
 );
 
 describe('useEnrollmentActions', () => {
-  const mockCourseId = 'course-123';
-  const mockEcommerceCheckoutLink = 'http://example.com/checkout';
   const mockEnrollAndRedirect = jest.fn();
 
   beforeEach(() => {
@@ -37,8 +37,8 @@ describe('useEnrollmentActions', () => {
 
   it('should initialize with default state', () => {
     const { result } = renderHookWithWrapper({
-      courseId: mockCourseId,
-      ecommerceCheckoutLink: mockEcommerceCheckoutLink,
+      courseId: mockCourseAboutResponse.id,
+      ecommerceCheckoutLink: mockCourseAboutResponse.ecommerceCheckoutLink,
     });
 
     expect(result.current.enrollmentError).toBeNull();
@@ -48,8 +48,8 @@ describe('useEnrollmentActions', () => {
   it('should handle successful enrollment', async () => {
     mockEnrollAndRedirect.mockResolvedValueOnce(undefined);
     const { result } = renderHookWithWrapper({
-      courseId: mockCourseId,
-      ecommerceCheckoutLink: mockEcommerceCheckoutLink,
+      courseId: mockCourseAboutResponse.id,
+      ecommerceCheckoutLink: mockCourseAboutResponse.ecommerceCheckoutLink,
     });
 
     await act(async () => {
@@ -57,8 +57,8 @@ describe('useEnrollmentActions', () => {
     });
 
     expect(mockEnrollAndRedirect).toHaveBeenCalledWith(
-      mockCourseId,
-      'http://localhost:18000/dashboard',
+      mockCourseAboutResponse.id,
+      `${getConfig().LMS_BASE_URL}/dashboard`,
     );
   });
 
@@ -66,8 +66,8 @@ describe('useEnrollmentActions', () => {
     const mockError = new Error('Enrollment failed');
     mockEnrollAndRedirect.mockRejectedValueOnce(mockError);
     const { result } = renderHookWithWrapper({
-      courseId: mockCourseId,
-      ecommerceCheckoutLink: mockEcommerceCheckoutLink,
+      courseId: mockCourseAboutResponse.id,
+      ecommerceCheckoutLink: mockCourseAboutResponse.ecommerceCheckoutLink,
     });
 
     await act(async () => {
@@ -80,8 +80,8 @@ describe('useEnrollmentActions', () => {
 
   it('should handle ecommerce checkout with valid link', () => {
     const { result } = renderHookWithWrapper({
-      courseId: mockCourseId,
-      ecommerceCheckoutLink: mockEcommerceCheckoutLink,
+      courseId: mockCourseAboutResponse.id,
+      ecommerceCheckoutLink: mockCourseAboutResponse.ecommerceCheckoutLink,
     });
 
     const mockAssign = jest.fn();
@@ -95,13 +95,13 @@ describe('useEnrollmentActions', () => {
 
     result.current.handleEcommerceCheckout();
 
-    expect(mockAssign).toHaveBeenCalledWith(mockEcommerceCheckoutLink);
+    expect(mockAssign).toHaveBeenCalledWith(mockCourseAboutResponse.ecommerceCheckoutLink);
     expect(logError).not.toHaveBeenCalled();
   });
 
   it('should handle ecommerce checkout with missing link', () => {
     const { result } = renderHookWithWrapper({
-      courseId: mockCourseId,
+      courseId: mockCourseAboutResponse.id,
       ecommerceCheckoutLink: undefined,
     });
 

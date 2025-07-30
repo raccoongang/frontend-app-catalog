@@ -1,10 +1,9 @@
+import { CourseMediaPartial } from '../../types';
+
 export interface CourseMediaTypes {
   courseAboutData: {
     name: string;
-    media: {
-      courseImage: { uri: string };
-      courseVideo?: { uri?: string };
-    };
+    media: CourseMediaPartial;
   };
 }
 

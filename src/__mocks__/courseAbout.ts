@@ -28,7 +28,7 @@ export const mockCourseAboutResponse = {
       uri: '/asset-v1:openedx+123+2024+type@asset+block@494a0bae6c7f4aef47b5c0f7d85414b49371151e82646cbbbc22289b4c100c5f.jpg',
     },
     courseVideo: {
-      uri: null,
+      uri: 'https://youtube.com/watch?v=test123',
     },
     image: {
       raw: 'http://local.openedx.io:8000/asset-v1:openedx+123+2024+type@asset+block@494a0bae6c7f4aef47b5c0f7d85414b49371151e82646cbbbc22289b4c100c5f.jpg',
@@ -76,7 +76,7 @@ export const mockCourseAboutResponse = {
   allowAnonymous: false,
   ecommerceCheckout: false,
   singlePaidMode: {},
-  ecommerceCheckoutLink: null,
+  ecommerceCheckoutLink: 'http://example.com/checkout',
   courseImageUrls: [
     'raw',
     'small',
@@ -88,4 +88,10 @@ export const mockCourseAboutResponse = {
   preRequisiteCourses: [],
   sidebarHtmlEnabled: false,
   courseAboutSectionHtml: null,
+  aboutSidebarHtml: null,
+  displayNumberWithDefault: '123',
+  displayOrgWithDefault: 'openedx',
+  overview: '<div>Course overview content</div>',
+  ocwLinks: [],
+  prerequisites: [],
 };

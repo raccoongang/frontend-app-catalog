@@ -1,23 +1,13 @@
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 
-import { cleanup, renderHook, render } from '@src/setupTest';
-import { StatusAlert, EnrolledStatus, EnrollmentButton } from '../../components';
+import {
+  cleanup, renderHook, render, screen,
+} from '@src/setupTest';
+import { mockCourseAboutResponse } from '@src/__mocks__';
 import { ALERT_VARIANTS } from '../../constants';
 import { getLearningHomePageUrl } from '../../utils';
+import messages from '../../messages';
 import { useEnrollmentStatus } from '../useEnrollmentStatus';
-
-jest.mock('../../components', () => ({
-  StatusAlert: jest.fn(() => null),
-  EnrolledStatus: jest.fn(() => null),
-  EnrollmentButton: jest.fn(() => null),
-}));
-
-jest.mock('@edx/frontend-platform', () => ({
-  ...jest.requireActual('@edx/frontend-platform'),
-  getConfig: jest.fn(() => ({
-    LEARNING_BASE_URL: 'http://learning.example.com',
-  })),
-}));
 
 const wrapper = ({ children }) => (
   <IntlProvider locale="en" messages={{}}>
@@ -27,20 +17,8 @@ const wrapper = ({ children }) => (
 
 describe('useEnrollmentStatus', () => {
   const mockCourseAboutData = {
-    id: 'course-v1:test+course+1',
-    name: 'Test Course',
-    org: 'Test Org',
-    shortDescription: 'Test Description',
-    enrollment: { isActive: false },
-    isCourseFull: false,
-    invitationOnly: false,
-    canEnroll: true,
-    isShibCourse: false,
-    allowAnonymous: false,
+    ...mockCourseAboutResponse,
     showCoursewareLink: true,
-    singlePaidMode: {},
-    ecommerceCheckout: false,
-    ecommerceCheckoutLink: '',
   };
 
   const mockProps = {
@@ -60,18 +38,14 @@ describe('useEnrollmentStatus', () => {
   it('renders enrollment error alert when there is an error', () => {
     const { result } = renderHook(() => useEnrollmentStatus({
       ...mockProps,
-      enrollmentError: 'Enrollment failed',
+      enrollmentError: messages.statusAlertEnrollmentError.defaultMessage,
     }), { wrapper });
 
     render(result.current.renderStatusContent());
 
-    expect(StatusAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        variant: ALERT_VARIANTS.DANGER,
-        messageKey: 'statusAlertEnrollmentError',
-      }),
-      expect.any(Object),
-    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveClass(`course-about-intro-alert alert-${ALERT_VARIANTS.DANGER}`);
+    expect(alert).toHaveTextContent(messages.statusAlertEnrollmentError.defaultMessage);
   });
 
   it('renders enrolled status for authenticated active users', () => {
@@ -86,13 +60,13 @@ describe('useEnrollmentStatus', () => {
 
     render(result.current.renderStatusContent());
 
-    expect(EnrolledStatus).toHaveBeenCalledWith(
-      expect.objectContaining({
-        showCoursewareLink: true,
-        courseId: 'course-v1:test+course+1',
-      }),
-      expect.any(Object),
-    );
+    const alert = screen.getByRole('alert');
+
+    expect(alert).toHaveClass(`course-about-intro-alert alert-${ALERT_VARIANTS.SUCCESS}`);
+    expect(alert).toHaveTextContent(messages.statusAlertEnrolled.defaultMessage);
+
+    const viewCourseButton = screen.getByRole('link', { name: messages.viewCourseBtn.defaultMessage });
+    expect(viewCourseButton).toHaveAttribute('href', getLearningHomePageUrl(mockCourseAboutResponse.id));
   });
 
   it('renders full course alert when course is full', () => {
@@ -106,13 +80,9 @@ describe('useEnrollmentStatus', () => {
 
     render(result.current.renderStatusContent());
 
-    expect(StatusAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        variant: ALERT_VARIANTS.INFO,
-        messageKey: 'statusAlertFull',
-      }),
-      expect.any(Object),
-    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveClass(`course-about-intro-alert alert-${ALERT_VARIANTS.INFO}`);
+    expect(alert).toHaveTextContent(messages.statusAlertFull.defaultMessage);
   });
 
   it('renders invitation only alert when course is invitation only and user cannot enroll', () => {
@@ -127,13 +97,9 @@ describe('useEnrollmentStatus', () => {
 
     render(result.current.renderStatusContent());
 
-    expect(StatusAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        variant: ALERT_VARIANTS.INFO,
-        messageKey: 'statusAlertEnrollmentInvitationOnly',
-      }),
-      expect.any(Object),
-    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveClass(`course-about-intro-alert alert-${ALERT_VARIANTS.INFO}`);
+    expect(alert).toHaveTextContent(messages.statusAlertEnrollmentInvitationOnly.defaultMessage);
   });
 
   it('renders enrollment closed alert when course is not shib and user cannot enroll', () => {
@@ -148,13 +114,9 @@ describe('useEnrollmentStatus', () => {
 
     render(result.current.renderStatusContent());
 
-    expect(StatusAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        variant: ALERT_VARIANTS.INFO,
-        messageKey: 'statusAlertEnrollmentClosed',
-      }),
-      expect.any(Object),
-    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveClass(`course-about-intro-alert alert-${ALERT_VARIANTS.INFO}`);
+    expect(alert).toHaveTextContent(messages.statusAlertEnrollmentClosed.defaultMessage);
   });
 
   it('renders enrollment button for eligible users', () => {
@@ -162,16 +124,9 @@ describe('useEnrollmentStatus', () => {
 
     render(result.current.renderStatusContent());
 
-    expect(EnrollmentButton).toHaveBeenCalledWith(
-      expect.objectContaining({
-        singlePaidMode: {},
-        ecommerceCheckout: false,
-        isEnrollmentPending: false,
-        onEnroll: mockProps.handleChangeEnrollment,
-        onEcommerceCheckout: mockProps.handleEcommerceCheckout,
-      }),
-      expect.any(Object),
-    );
+    const enrollButton = screen.getByRole('button', { name: messages.enrollNowBtn.defaultMessage });
+    expect(enrollButton).toHaveClass('btn-primary');
+    expect(enrollButton).toHaveTextContent(messages.enrollNowBtn.defaultMessage);
   });
 
   it('renders view course button for anonymous users when course allows anonymous access', () => {
@@ -184,12 +139,36 @@ describe('useEnrollmentStatus', () => {
       },
     }), { wrapper });
 
-    const { container } = render(result.current.renderStatusContent());
+    render(result.current.renderStatusContent());
 
-    const expectedUrl = getLearningHomePageUrl(mockCourseAboutData.id);
-    expect(expectedUrl).toBe('http://learning.example.com/learning/course/course-v1:test+course+1/home');
+    const viewCourseButton = screen.getByRole('link', { name: messages.viewCourseBtn.defaultMessage });
+    expect(viewCourseButton).toHaveAttribute('href', getLearningHomePageUrl(mockCourseAboutData.id));
+  });
 
-    expect(container.querySelector('a')).toBeInTheDocument();
-    expect(container.querySelector('a')).toHaveAttribute('href', expectedUrl);
+  it('shows pending state on enrollment button when enrollment is pending', () => {
+    const { result } = renderHook(() => useEnrollmentStatus({
+      ...mockProps,
+      isEnrollmentPending: true,
+    }), { wrapper });
+
+    render(result.current.renderStatusContent());
+
+    const enrollButton = screen.getByRole('button', { name: messages.enrollNowBtnPending.defaultMessage });
+    expect(enrollButton).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('handles ecommerce checkout mode correctly', () => {
+    const { result } = renderHook(() => useEnrollmentStatus({
+      ...mockProps,
+      courseAboutData: {
+        ...mockCourseAboutData,
+        ecommerceCheckout: true,
+      },
+    }), { wrapper });
+
+    render(result.current.renderStatusContent());
+
+    const enrollButton = screen.getByRole('button', { name: messages.enrollNowBtn.defaultMessage });
+    expect(enrollButton).toHaveTextContent(messages.enrollNowBtn.defaultMessage);
   });
 });

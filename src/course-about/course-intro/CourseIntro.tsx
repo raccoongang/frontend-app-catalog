@@ -1,10 +1,10 @@
 import { Card } from '@openedx/paragon';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
-import { CourseIntroTypes } from './types';
+import { CourseAboutDataPartial } from '../types';
 import { useEnrollmentActions, useEnrollmentStatus } from './hooks';
 
-export const CourseIntro = ({ courseAboutData }: CourseIntroTypes) => {
+export const CourseIntro = ({ courseAboutData }: { courseAboutData: CourseAboutDataPartial }) => {
   const authenticatedUser = getAuthenticatedUser();
 
   const {
