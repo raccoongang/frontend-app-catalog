@@ -1,14 +1,18 @@
 import type { ReactNode } from 'react';
 
 export interface FrontendParamsResponse {
-  homepageOverlayHtml: string | null,
-  showHomepagePromoVideo: boolean,
-  homepagePromoVideoYoutubeId: string,
+  courseAboutShowSocialLinks: boolean,
+  courseAboutTwitterAccount: string,
+  coursesAreBrowsable: boolean,
   enableCourseDiscovery: boolean,
   enableCourseSortingByStartDate: boolean,
-  showPartners: boolean,
   homepageCourseMax: number,
-  coursesAreBrowsable: boolean,
+  homepageOverlayHtml: string | null,
+  homepagePromoVideoYoutubeId: string,
+  isCosmeticPriceEnabled: boolean,
+  showHomepagePromoVideo: boolean,
+  showPartners: boolean,
+  sidebarHtmlEnabled: boolean,
 }
 
 export interface FrontendParamsContextType {
