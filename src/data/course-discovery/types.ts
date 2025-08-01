@@ -1,5 +1,5 @@
 export interface CourseDiscoveryResponse {
-  count: number;
+  took: number;
   total: number;
   results: {
     id: string;
@@ -24,4 +24,52 @@ export interface CourseDiscoveryResponse {
       catalogVisibility: string;
     };
   }[];
+  aggs: {
+    [key: string]: {
+      terms: {
+        [key: string]: number;
+      };
+      total: number;
+      other: number;
+    };
+  };
+  maxScore: number;
+}
+
+export interface Aggregations {
+  [key: string]: {
+    terms: {
+      [key: string]: number;
+    };
+  };
+}
+
+export interface CourseDiscoveryParams {
+  pageSize?: number;
+  pageIndex?: number;
+  filters?: Record<string, string[]>;
+  enableCourseSortingByStartDate?: boolean;
+}
+
+export interface DataTableParams {
+  pageSize?: number;
+  pageIndex?: number;
+  filters?: Array<{
+    id: string;
+    value: string | string[];
+  }>;
+}
+
+export interface CourseDiscoveryHook {
+  data: CourseDiscoveryResponse | undefined;
+  isLoading: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  error: Error | null;
+  fetchData: (params: DataTableParams) => void;
+}
+
+export interface DataTableFilter {
+  id: string;
+  value: string | string[];
 }
