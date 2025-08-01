@@ -1,14 +1,14 @@
 import { getConfig } from '@edx/frontend-platform';
 
-import { mockCourseResponse } from '../../__mocks__';
-import { render, screen } from '../../setupTest';
+import { mockCourseResponse } from '@src/__mocks__';
+import { render, screen } from '@src/setupTest';
 import { CourseCard } from '.';
 
 import messages from './messages';
 
 describe('CourseCard', () => {
   const renderComponent = (course = mockCourseResponse) => render(
-    <CourseCard course={course} />,
+    <CourseCard original={course} />,
   );
 
   it('renders course information correctly', () => {
@@ -31,7 +31,7 @@ describe('CourseCard', () => {
     renderComponent();
 
     const logo = screen.getByAltText(mockCourseResponse.data.org);
-    expect(logo).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${mockCourseResponse.data.orgImg}`);
+    expect(logo).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${mockCourseResponse.data.orgImageUrl}`);
   });
 
   it('formats the link destination correctly', () => {

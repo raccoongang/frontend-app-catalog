@@ -3,6 +3,8 @@ export interface CourseDiscoveryResponse {
   total: number;
   results: {
     id: string;
+    index: string;
+    type: string;
     title: string;
     data: {
       id: string;
@@ -10,6 +12,7 @@ export interface CourseDiscoveryResponse {
       start: string;
       imageUrl: string;
       org: string;
+      orgImageUrl?: string;
       content: {
         displayName: string;
         overview?: string;

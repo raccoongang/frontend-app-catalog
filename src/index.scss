@@ -5,3 +5,15 @@
 @import "assets/scss/animations";
 @import "home";
 @import "course-about/CourseAboutPage";
+
+.pgn__data-table-layout-sidebar {
+  min-width: 386px;
+}
+
+.pgn__data-table-layout-wrapper {
+  margin-bottom: 20px;
+}
+
+.pgn__searchfield {
+  width: 386px;
+}
