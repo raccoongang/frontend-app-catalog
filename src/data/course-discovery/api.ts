@@ -31,11 +31,6 @@ export const fetchCourseDiscovery = async (
   const { data } = await getAuthenticatedHttpClient().post(
     getCourseDiscoveryUrl(),
     formData,
-    // {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // },
   );
 
   return camelCaseObject(data);

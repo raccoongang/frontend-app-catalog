@@ -56,7 +56,7 @@ const CatalogPage = () => {
   );
 
   const tableColumns = useMemo(
-    () => transformAggregationsToFilterChoices(courseData?.aggs),
+    () => transformAggregationsToFilterChoices(courseData?.aggs, intl),
     [courseData],
   );
 

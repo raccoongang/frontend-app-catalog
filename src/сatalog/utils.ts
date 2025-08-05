@@ -1,7 +1,9 @@
 import { CheckboxFilter } from '@openedx/paragon';
+import { IntlShape } from '@edx/frontend-platform/i18n';
 
 import type { CourseDiscoveryResponse, Aggregations } from '../data/course-discovery/types';
 import type { TransformedCourseItem } from './types';
+import messages from './messages';
 
 /**
  * Transforms course discovery results into a format suitable for DataTable display.
@@ -26,13 +28,13 @@ export const transformResultsForTable = (results: CourseDiscoveryResponse['resul
 /**
  * Transforms aggregations into filter choices for DataTable.
  */
-export const transformAggregationsToFilterChoices = (aggregations: Aggregations | undefined) => {
+export const transformAggregationsToFilterChoices = (aggregations: Aggregations | undefined, intl: IntlShape) => {
   if (!aggregations) { return []; }
 
   const headerMap: Record<string, string> = {
-    org: 'Organizations',
-    language: 'Languages',
-    modes: 'Course Types',
+    org: intl.formatMessage(messages.organizations),
+    language: intl.formatMessage(messages.languages),
+    modes: intl.formatMessage(messages.courseTypes),
   };
 
   return Object.entries(aggregations).map(([key, aggValue]) => {
