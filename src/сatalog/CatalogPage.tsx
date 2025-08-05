@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Container, Alert, SearchField, DataTable, TextFilter,
   CardView, useMediaQuery, breakpoints,
@@ -23,6 +24,7 @@ import messages from './messages';
 
 const CatalogPage = () => {
   const intl = useIntl();
+  const [searchParams] = useSearchParams();
   const {
     data: courseData,
     isLoading,
@@ -36,13 +38,21 @@ const CatalogPage = () => {
   const {
     pageIndex,
     filterState,
+    searchString,
     handleFetchData,
     resetFilterProgress,
+    handleSearch,
+    handleClearSearch,
   } = useFilterState(fetchData);
 
   useEffect(() => {
-    fetchData({ pageIndex: DEFAULT_PAGE_INDEX, pageSize: DEFAULT_PAGE_SIZE });
-  }, [fetchData]);
+    const urlSearchQuery = searchParams.get('search_query');
+    if (urlSearchQuery && !searchString) {
+      handleSearch(urlSearchQuery);
+    } else if (!urlSearchQuery && !searchString) {
+      fetchData({ pageIndex: DEFAULT_PAGE_INDEX, pageSize: DEFAULT_PAGE_SIZE, filters: [] });
+    }
+  }, [searchParams, searchString, handleSearch, fetchData]);
 
   useEffect(() => {
     if (!isFetching && filterState.isFilterChangeInProgress) {
@@ -86,20 +96,22 @@ const CatalogPage = () => {
   return (
     <Container className="container-xl pt-5.5">
       <SubHeader
-        title={intl.formatMessage(messages.exploreCourses)}
+        title={searchString
+          ? intl.formatMessage(messages.searchResults, { query: searchString })
+          : intl.formatMessage(messages.exploreCourses)}
         className={classNames({ 'mx-2.5': isMedium })}
       />
       {totalCourses > 0 ? (
         <>
           <SearchField
-            key=""
+            key="search-field"
             className={classNames({
               'w-auto mx-2.5 mb-0': isMedium,
               'mb-4': !isMedium,
             })}
-            value=""
-            onSubmit={() => {}}
-            onClear={() => {}}
+            value={searchString}
+            onSubmit={handleSearch}
+            onClear={handleClearSearch}
             placeholder={intl.formatMessage(messages.searchPlaceholder)}
           />
           <DataTable

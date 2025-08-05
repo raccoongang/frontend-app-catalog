@@ -19,12 +19,17 @@ export const fetchCourseDiscovery = async (
     pageIndex = DEFAULT_PAGE_INDEX,
     enableCourseSortingByStartDate = false,
     filters = {},
+    searchString = '',
   } = params;
 
   const formData = new FormData();
   formData.append('page_size', String(pageSize));
   formData.append('page_index', String(pageIndex));
   formData.append('enable_course_sorting_by_start_date', String(enableCourseSortingByStartDate));
+
+  if (searchString) {
+    formData.append('search_string', searchString);
+  }
 
   addFiltersToFormData(formData, filters);
 

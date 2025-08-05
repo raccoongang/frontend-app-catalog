@@ -13,12 +13,14 @@ export const useCourseDiscovery = ({
   pageIndex = DEFAULT_PAGE_INDEX,
   enableCourseSortingByStartDate = false,
   filters = {},
+  searchString = '',
 }: Partial<CourseDiscoveryParams> = {}): CourseDiscoveryHook => {
   const [params, setParams] = useState<CourseDiscoveryParams>({
     pageSize,
     pageIndex,
     enableCourseSortingByStartDate,
     filters,
+    searchString,
   });
 
   const {
@@ -32,13 +34,14 @@ export const useCourseDiscovery = ({
   /**
    * Updates query params and triggers data refetch if params have changed.
    */
-  const fetchData = useCallback((newParams: DataTableParams) => {
+  const fetchData = useCallback((newParams: DataTableParams & { searchString?: string }) => {
     const transformedFilters = transformDataTableFilters(newParams.filters);
 
     const transformedParams: CourseDiscoveryParams = {
       pageSize: newParams.pageSize,
       pageIndex: newParams.pageIndex,
       filters: transformedFilters,
+      searchString: newParams.searchString || '',
     };
 
     setParams(prevParams => {
