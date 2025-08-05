@@ -1,4 +1,4 @@
-import { DataTableFilter, type CourseDiscoveryParams, type DataTableParams } from './types';
+import { DataTableFilter } from './types';
 
 /**
  * Appends filters to the FormData object for backend requests.
@@ -58,28 +58,4 @@ export const transformDataTableFilters = (
   });
 
   return transformedFilters;
-};
-
-/**
- * Creates a function that fetches data from the API.
- */
-export const createFetchData = (
-  setParams: (params: CourseDiscoveryParams) => void,
-  paramsRef: { current: CourseDiscoveryParams },
-) => (newParams: DataTableParams) => {
-  const transformedFilters = transformDataTableFilters(newParams.filters);
-
-  const transformedParams: CourseDiscoveryParams = {
-    pageSize: newParams.pageSize,
-    // pageIndex: newParams.pageIndex,
-    pageIndex: Object.keys(transformedFilters).length > 0 ? 0 : newParams.pageIndex,
-    filters: transformedFilters,
-  };
-
-  const currentParams = paramsRef.current;
-  const hasChanged = JSON.stringify(currentParams) !== JSON.stringify(transformedParams);
-
-  if (hasChanged) {
-    setParams(transformedParams);
-  }
 };

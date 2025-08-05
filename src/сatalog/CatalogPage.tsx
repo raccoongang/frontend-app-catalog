@@ -1,6 +1,4 @@
-import {
-  useState, useEffect, useCallback, useMemo,
-} from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   Container, Alert, SearchField, DataTable, TextFilter,
   CardView, useMediaQuery, breakpoints,
@@ -10,16 +8,17 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 
-import { useFrontendParams } from '@src/data/frontend-params/FrontendParamsContext';
+import { useFrontendParams } from '../data/frontend-params/FrontendParamsContext';
+import { useCourseDiscovery } from '../data/course-discovery/hooks';
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '../data/course-discovery/constants';
 import {
   AlertNotification,
   CourseCard,
   Loading,
   SubHeader,
 } from '../generic';
-import { useCourseDiscovery } from '../data/course-discovery/hooks';
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '../data/course-discovery/constants';
 import { transformResultsForTable, transformAggregationsToFilterChoices } from './utils';
+import { useFilterState } from './hooks/useFilterState';
 import messages from './messages';
 
 const CatalogPage = () => {
@@ -33,18 +32,23 @@ const CatalogPage = () => {
   } = useCourseDiscovery();
   const { data: frontendParams } = useFrontendParams();
   const isMedium = useMediaQuery({ maxWidth: breakpoints.large.maxWidth });
-  const [pageIndex, setPageIndex] = useState(DEFAULT_PAGE_INDEX);
+
+  const {
+    pageIndex,
+    filterState,
+    handleFetchData,
+    resetFilterProgress,
+  } = useFilterState(fetchData);
 
   useEffect(() => {
-    fetchData({ pageIndex, pageSize: DEFAULT_PAGE_SIZE });
-  }, [pageIndex, fetchData]);
+    fetchData({ pageIndex: DEFAULT_PAGE_INDEX, pageSize: DEFAULT_PAGE_SIZE });
+  }, [fetchData]);
 
-  const handleFetchData = useCallback((params) => {
-    if (params.pageIndex !== pageIndex) {
-      setPageIndex(params.pageIndex);
+  useEffect(() => {
+    if (!isFetching && filterState.isFilterChangeInProgress) {
+      resetFilterProgress();
     }
-    fetchData(params);
-  }, [pageIndex, fetchData]);
+  }, [isFetching, filterState.isFilterChangeInProgress, resetFilterProgress]);
 
   const tableData = useMemo(
     () => transformResultsForTable(courseData?.results),

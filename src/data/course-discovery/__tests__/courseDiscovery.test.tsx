@@ -22,7 +22,7 @@ describe('Course Discovery Data Layer', () => {
       const mockPost = jest.fn().mockResolvedValue({ data: mockCourseDiscoveryResponse });
       mockGetAuthenticatedHttpClient.mockReturnValue({ post: mockPost });
 
-      const result = await fetchCourseDiscovery();
+      const result = await fetchCourseDiscovery({});
 
       expect(mockPost).toHaveBeenCalledTimes(1);
       const [url] = mockPost.mock.calls[0];
@@ -38,7 +38,11 @@ describe('Course Discovery Data Layer', () => {
       const customPageSize = 21;
       const customPageIndex = 2;
 
-      await fetchCourseDiscovery(customPageSize, customPageIndex, true);
+      await fetchCourseDiscovery({
+        pageSize: customPageSize,
+        pageIndex: customPageIndex,
+        enableCourseSortingByStartDate: true,
+      });
 
       const [url, formData] = mockPost.mock.calls[0];
 
@@ -54,7 +58,7 @@ describe('Course Discovery Data Layer', () => {
       const mockPost = jest.fn().mockRejectedValue(error);
       mockGetAuthenticatedHttpClient.mockReturnValue({ post: mockPost });
 
-      await expect(fetchCourseDiscovery()).rejects.toThrow('API Error');
+      await expect(fetchCourseDiscovery({})).rejects.toThrow('API Error');
     });
   });
 
