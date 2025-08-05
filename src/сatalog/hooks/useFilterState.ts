@@ -52,6 +52,7 @@ export const useFilterState = (fetchData) => {
   const handleSearch = useCallback((query) => {
     setSearchString(query);
     setPageIndex(0);
+
     setFilterState(prev => ({
       ...prev,
       isFilterChangeInProgress: true,
@@ -75,6 +76,7 @@ export const useFilterState = (fetchData) => {
   const handleClearSearch = useCallback(() => {
     setSearchString('');
     setPageIndex(0);
+
     setFilterState(prev => ({
       ...prev,
       isFilterChangeInProgress: true,

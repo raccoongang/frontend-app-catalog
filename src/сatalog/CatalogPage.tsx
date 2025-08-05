@@ -96,47 +96,51 @@ const CatalogPage = () => {
   return (
     <Container className="container-xl pt-5.5">
       <SubHeader
-        title={searchString
-          ? intl.formatMessage(messages.searchResults, { query: searchString })
-          : intl.formatMessage(messages.exploreCourses)}
+        title={(() => {
+          if (searchString && totalCourses === 0) {
+            return intl.formatMessage(messages.noSearchResults, { query: searchString });
+          }
+          if (searchString) {
+            return intl.formatMessage(messages.searchResults, { query: searchString });
+          }
+          return intl.formatMessage(messages.exploreCourses);
+        })()}
         className={classNames({ 'mx-2.5': isMedium })}
       />
+      <SearchField
+        key="search-field"
+        className={classNames({
+          'w-auto mx-2.5 mb-0': isMedium,
+          'mb-4': !isMedium,
+        })}
+        value={searchString}
+        onSubmit={handleSearch}
+        onClear={handleClearSearch}
+        placeholder={intl.formatMessage(messages.searchPlaceholder)}
+      />
       {totalCourses > 0 ? (
-        <>
-          <SearchField
-            key="search-field"
-            className={classNames({
-              'w-auto mx-2.5 mb-0': isMedium,
-              'mb-4': !isMedium,
-            })}
-            value={searchString}
-            onSubmit={handleSearch}
-            onClear={handleClearSearch}
-            placeholder={intl.formatMessage(messages.searchPlaceholder)}
-          />
-          <DataTable
-            isLoading={isFetching}
-            showFiltersInSidebar={!isMedium}
-            isFilterable={frontendParams?.enableCourseDiscovery}
-            isSortable
-            isPaginated
-            manualFilters
-            manualPagination
-            defaultColumnValues={{ Filter: TextFilter }}
-            itemCount={courseData?.total || totalCourses}
-            pageSize={DEFAULT_PAGE_SIZE}
-            pageCount={pageCount}
-            initialState={{ pageSize: DEFAULT_PAGE_SIZE, pageIndex }}
-            data={tableData}
-            columns={tableColumns}
-            fetchData={handleFetchData}
-          >
-            <DataTable.TableControlBar />
-            <CardView CardComponent={CourseCard} skeletonCardCount={3} />
-            <DataTable.EmptyTable content={intl.formatMessage(messages.noResultsFound)} />
-            <DataTable.TableFooter />
-          </DataTable>
-        </>
+        <DataTable
+          isLoading={isFetching}
+          showFiltersInSidebar={!isMedium}
+          isFilterable={frontendParams?.enableCourseDiscovery}
+          isSortable
+          isPaginated
+          manualFilters
+          manualPagination
+          defaultColumnValues={{ Filter: TextFilter }}
+          itemCount={courseData?.total || totalCourses}
+          pageSize={DEFAULT_PAGE_SIZE}
+          pageCount={pageCount}
+          initialState={{ pageSize: DEFAULT_PAGE_SIZE, pageIndex }}
+          data={tableData}
+          columns={tableColumns}
+          fetchData={handleFetchData}
+        >
+          <DataTable.TableControlBar />
+          <CardView CardComponent={CourseCard} skeletonCardCount={3} />
+          <DataTable.EmptyTable content={intl.formatMessage(messages.noResultsFound)} />
+          <DataTable.TableFooter />
+        </DataTable>
       ) : (
         <AlertNotification
           title={intl.formatMessage(messages.noCoursesAvailable)}

@@ -56,6 +56,11 @@ const messages = defineMessages({
     defaultMessage: 'Course types',
     description: 'Course types filter.',
   },
+  noSearchResults: {
+    id: 'category.catalog.no-search-results',
+    defaultMessage: 'We couldn\'t find any results for "{query}"',
+    description: 'No search results.',
+  },
 });
 
 export default messages;
