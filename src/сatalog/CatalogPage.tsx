@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useMemo } from 'react';
 import {
   Container, Alert, SearchField, DataTable, TextFilter,
   CardView, useMediaQuery, breakpoints,
@@ -9,22 +8,27 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 
-import { useFrontendParams } from '../data/frontend-params/FrontendParamsContext';
-import { useCourseDiscovery } from '../data/course-discovery/hooks';
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '../data/course-discovery/constants';
+import { useFrontendParams } from '@src/data/frontend-params/FrontendParamsContext';
+import { useCourseDiscovery } from '@src/data/course-discovery/hooks';
+import { DEFAULT_PAGE_SIZE } from '@src/data/course-discovery/constants';
 import {
   AlertNotification,
   CourseCard,
   Loading,
   SubHeader,
-} from '../generic';
-import { transformResultsForTable, transformAggregationsToFilterChoices } from './utils';
-import { useFilterState } from './hooks/useFilterState';
+} from '@src/generic';
+import {
+  transformResultsForTable,
+  transformAggregationsToFilterChoices,
+  getPageTitle,
+} from './utils';
+import { useCatalogState } from './hooks/useCatalogState';
 import messages from './messages';
+
+const SKELETON_CARD_COUNT = 3;
 
 const CatalogPage = () => {
   const intl = useIntl();
-  const [searchParams] = useSearchParams();
   const {
     data: courseData,
     isLoading,
@@ -37,37 +41,40 @@ const CatalogPage = () => {
 
   const {
     pageIndex,
-    filterState,
     searchString,
+    lastSearchQuery,
+    previousCourseData,
     handleFetchData,
-    resetFilterProgress,
     handleSearch,
     handleClearSearch,
-  } = useFilterState(fetchData);
+  } = useCatalogState(fetchData, courseData, isFetching);
 
-  useEffect(() => {
-    const urlSearchQuery = searchParams.get('search_query');
-    if (urlSearchQuery && !searchString) {
-      handleSearch(urlSearchQuery);
-    } else if (!urlSearchQuery && !searchString) {
-      fetchData({ pageIndex: DEFAULT_PAGE_INDEX, pageSize: DEFAULT_PAGE_SIZE, filters: [] });
-    }
-  }, [searchParams, searchString, handleSearch, fetchData]);
+  /**
+   * Determines which data to display in the catalog based on search state and results.
+   * Shows previous course data when:
+   * - User has an active search but no results were found, OR
+   * - User previously searched, cleared the search, but no results exist
+   * This provides better UX by showing cached data instead of empty state.
+   */
+  const displayData = useMemo(() => {
+    const hasSearchResults = (courseData?.results?.length ?? 0) > 0;
+    const hasActiveSearch = Boolean(searchString);
+    const hadPreviousSearch = Boolean(lastSearchQuery);
 
-  useEffect(() => {
-    if (!isFetching && filterState.isFilterChangeInProgress) {
-      resetFilterProgress();
-    }
-  }, [isFetching, filterState.isFilterChangeInProgress, resetFilterProgress]);
+    const shouldShowPreviousData = (hasActiveSearch && !hasSearchResults && previousCourseData)
+        || (hadPreviousSearch && !hasActiveSearch && !hasSearchResults && previousCourseData);
+
+    return shouldShowPreviousData ? previousCourseData : courseData;
+  }, [courseData, searchString, lastSearchQuery, previousCourseData]);
 
   const tableData = useMemo(
-    () => transformResultsForTable(courseData?.results),
-    [courseData],
+    () => transformResultsForTable(displayData?.results),
+    [displayData?.results],
   );
 
   const tableColumns = useMemo(
-    () => transformAggregationsToFilterChoices(courseData?.aggs, intl),
-    [courseData],
+    () => transformAggregationsToFilterChoices(displayData?.aggs, intl),
+    [displayData?.aggs, intl],
   );
 
   if (isLoading) {
@@ -90,57 +97,56 @@ const CatalogPage = () => {
     );
   }
 
-  const totalCourses = courseData?.results?.length ?? 0;
-  const pageCount = Math.ceil((courseData?.total || totalCourses) / DEFAULT_PAGE_SIZE);
+  const totalCourses = displayData?.results?.length ?? 0;
+  const pageCount = Math.ceil((displayData?.total || totalCourses) / DEFAULT_PAGE_SIZE);
 
   return (
     <Container className="container-xl pt-5.5">
       <SubHeader
-        title={(() => {
-          if (searchString && totalCourses === 0) {
-            return intl.formatMessage(messages.noSearchResults, { query: searchString });
-          }
-          if (searchString) {
-            return intl.formatMessage(messages.searchResults, { query: searchString });
-          }
-          return intl.formatMessage(messages.exploreCourses);
-        })()}
+        title={getPageTitle({
+          intl,
+          lastSearchQuery,
+          searchString,
+          courseData,
+        })}
         className={classNames({ 'mx-2.5': isMedium })}
       />
-      <SearchField
-        key="search-field"
-        className={classNames({
-          'w-auto mx-2.5 mb-0': isMedium,
-          'mb-4': !isMedium,
-        })}
-        value={searchString}
-        onSubmit={handleSearch}
-        onClear={handleClearSearch}
-        placeholder={intl.formatMessage(messages.searchPlaceholder)}
-      />
       {totalCourses > 0 ? (
-        <DataTable
-          isLoading={isFetching}
-          showFiltersInSidebar={!isMedium}
-          isFilterable={frontendParams?.enableCourseDiscovery}
-          isSortable
-          isPaginated
-          manualFilters
-          manualPagination
-          defaultColumnValues={{ Filter: TextFilter }}
-          itemCount={courseData?.total || totalCourses}
-          pageSize={DEFAULT_PAGE_SIZE}
-          pageCount={pageCount}
-          initialState={{ pageSize: DEFAULT_PAGE_SIZE, pageIndex }}
-          data={tableData}
-          columns={tableColumns}
-          fetchData={handleFetchData}
-        >
-          <DataTable.TableControlBar />
-          <CardView CardComponent={CourseCard} skeletonCardCount={3} />
-          <DataTable.EmptyTable content={intl.formatMessage(messages.noResultsFound)} />
-          <DataTable.TableFooter />
-        </DataTable>
+        <>
+          <SearchField
+            key="search-field"
+            className={classNames({
+              'w-auto mx-2.5 mb-0': isMedium,
+              'mb-4': !isMedium,
+            })}
+            value={searchString}
+            onSubmit={handleSearch}
+            onClear={handleClearSearch}
+            placeholder={intl.formatMessage(messages.searchPlaceholder)}
+          />
+          <DataTable
+            isLoading={isFetching}
+            showFiltersInSidebar={!isMedium}
+            isFilterable={frontendParams?.enableCourseDiscovery}
+            isSortable
+            isPaginated
+            manualFilters
+            manualPagination
+            defaultColumnValues={{ Filter: TextFilter }}
+            itemCount={displayData?.total || totalCourses}
+            pageSize={DEFAULT_PAGE_SIZE}
+            pageCount={pageCount}
+            initialState={{ pageSize: DEFAULT_PAGE_SIZE, pageIndex }}
+            data={tableData}
+            columns={tableColumns}
+            fetchData={handleFetchData}
+          >
+            <DataTable.TableControlBar />
+            <CardView CardComponent={CourseCard} skeletonCardCount={SKELETON_CARD_COUNT} />
+            <DataTable.EmptyTable content={intl.formatMessage(messages.noResultsFound)} />
+            <DataTable.TableFooter />
+          </DataTable>
+        </>
       ) : (
         <AlertNotification
           title={intl.formatMessage(messages.noCoursesAvailable)}

@@ -2,8 +2,29 @@ import { CheckboxFilter } from '@openedx/paragon';
 import { IntlShape } from '@edx/frontend-platform/i18n';
 
 import type { CourseDiscoveryResponse, Aggregations } from '../data/course-discovery/types';
-import type { TransformedCourseItem } from './types';
+import type { TransformedCourseItem, GetPageTitleProps } from './types';
 import messages from './messages';
+
+/**
+ * Determines the appropriate page title based on search state and results.
+ */
+export const getPageTitle = ({
+  intl,
+  lastSearchQuery,
+  searchString,
+  courseData,
+}: GetPageTitleProps) => {
+  if (lastSearchQuery && !searchString) {
+    return intl.formatMessage(messages.noSearchResults, { query: lastSearchQuery });
+  }
+  if (searchString && (courseData?.results?.length ?? 0) === 0) {
+    return intl.formatMessage(messages.noSearchResults, { query: searchString });
+  }
+  if (searchString) {
+    return intl.formatMessage(messages.searchResults, { query: searchString });
+  }
+  return intl.formatMessage(messages.exploreCourses);
+};
 
 /**
  * Transforms course discovery results into a format suitable for DataTable display.
