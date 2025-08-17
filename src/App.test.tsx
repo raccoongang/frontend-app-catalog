@@ -1,6 +1,6 @@
-import { mockCourseDiscoveryResponse } from './сatalog/__mocks__';
+import { mockCourseDiscoveryResponse } from './__mocks__';
 import messages from './сatalog/messages';
-import { useCourseDiscovery } from './сatalog/data/hooks';
+import { useCourseDiscovery } from './data/course-discovery/hooks';
 import {
   render, within, waitFor, screen,
 } from './setupTest';
@@ -11,12 +11,10 @@ jest.mock('@edx/frontend-platform', () => ({
   getAuthenticatedUser: jest.fn(() => ({ username: 'test-user', roles: [] })),
   getConfig: jest.fn(() => ({
     LMS_BASE_URL: process.env.LMS_BASE_URL,
-    ENABLE_PROGRAMS: process.env.ENABLE_PROGRAMS,
-    ENABLE_COURSE_DISCOVERY: process.env.ENABLE_COURSE_DISCOVERY,
   })),
 }));
 
-jest.mock('./сatalog/data/hooks', () => ({
+jest.mock('./data/course-discovery/hooks', () => ({
   useCourseDiscovery: jest.fn(),
 }));
 

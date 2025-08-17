@@ -1,5 +1,6 @@
 export interface CourseDiscoveryResponse {
   count: number;
+  total: number;
   results: {
     id: string;
     title: string;

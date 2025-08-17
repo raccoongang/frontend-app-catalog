@@ -7,11 +7,6 @@ jest.mock('@edx/frontend-platform', () => ({
   subscribe: jest.fn(),
   initialize: jest.fn(),
   ensureConfig: jest.fn(),
-  getConfig: jest.fn(() => ({
-    LMS_BASE_URL: process.env.LMS_BASE_URL,
-    ENABLE_PROGRAMS: process.env.ENABLE_PROGRAMS,
-    ENABLE_COURSE_DISCOVERY: process.env.ENABLE_COURSE_DISCOVERY,
-  })),
 }));
 
 jest.mock('react-dom/client', () => ({
