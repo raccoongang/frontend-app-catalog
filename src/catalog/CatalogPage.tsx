@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import {
   DataTable, Container, SearchField, Alert, breakpoints,
   useMediaQuery, TextFilter, CardView,
@@ -7,6 +7,7 @@ import { ErrorPage } from '@edx/frontend-platform/react';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
+import debounce from 'lodash.debounce';
 
 import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX } from '@src/data/course-list-search/constants';
 import { useCourseListSearch } from '@src/data/course-list-search/hooks';
@@ -40,6 +41,13 @@ const CatalogPage = () => {
     resetFilterProgress,
   } = useCatalog({ fetchData, courseData, isFetching });
 
+  const [inputValue, setInputValue] = useState(searchString);
+  const isUserInputRef = useRef(false);
+  const lastSearchedValueRef = useRef<string>('');
+  const debouncedSearchRef = useRef<ReturnType<typeof debounce> | null>(null);
+  const searchStringRef = useRef(searchString);
+  const lastSearchQueryRef = useRef(lastSearchQuery);
+
   /**
    * Determines which data to display in the catalog based on search state and results.
    * Shows previous course data when:
@@ -67,6 +75,85 @@ const CatalogPage = () => {
       resetFilterProgress();
     }
   }, [isFetching, filterState.isFilterChangeInProgress, resetFilterProgress]);
+
+  useEffect(() => {
+    if (!lastSearchQuery && lastSearchedValueRef.current) {
+      lastSearchedValueRef.current = '';
+    }
+  }, [lastSearchQuery]);
+
+  useEffect(() => {
+    searchStringRef.current = searchString;
+    lastSearchQueryRef.current = lastSearchQuery;
+  }, [searchString, lastSearchQuery]);
+
+  useEffect(() => {
+    if (!isUserInputRef.current && !lastSearchQuery) {
+      setInputValue(searchString);
+    }
+    isUserInputRef.current = false;
+  }, [searchString, lastSearchQuery]);
+
+  useEffect(() => {
+    const performSearch = (value: string) => {
+      const currentSearchString = searchStringRef.current;
+      const currentLastSearchQuery = lastSearchQueryRef.current;
+
+      if (!value) {
+        lastSearchedValueRef.current = '';
+        handleClearSearch();
+        return;
+      }
+
+      if (value === lastSearchedValueRef.current && !currentSearchString && currentLastSearchQuery) {
+        return;
+      }
+
+      lastSearchedValueRef.current = value;
+      handleSearch(value);
+    };
+
+    debouncedSearchRef.current?.cancel();
+
+    debouncedSearchRef.current = debounce(performSearch, 500);
+
+    return () => {
+      debouncedSearchRef.current?.cancel();
+    };
+  }, [handleSearch, handleClearSearch]);
+
+  useEffect(() => {
+    if (!isUserInputRef.current && inputValue === searchString) {
+      return;
+    }
+
+    if (inputValue === searchString) {
+      return;
+    }
+
+    debouncedSearchRef.current?.(inputValue);
+  }, [inputValue, searchString]);
+
+  const handleInputChange = (value: string) => {
+    isUserInputRef.current = true;
+    setInputValue(value);
+  };
+
+  const handleInputSubmit = useCallback((value: string) => {
+    debouncedSearchRef.current?.cancel();
+    isUserInputRef.current = true;
+    lastSearchedValueRef.current = value;
+    setInputValue(value);
+    handleSearch(value);
+  }, [handleSearch]);
+
+  const handleInputClear = useCallback(() => {
+    debouncedSearchRef.current?.cancel();
+    isUserInputRef.current = true;
+    lastSearchedValueRef.current = '';
+    setInputValue('');
+    handleClearSearch();
+  }, [handleClearSearch]);
 
   const tableColumns = useMemo(
     () => transformAggregationsToFilterChoices(displayData?.aggs, intl),
@@ -117,9 +204,10 @@ const CatalogPage = () => {
                 'mb-4 w-25': !isMedium,
               })}
               placeholder={intl.formatMessage(messages.searchPlaceholder)}
-              value={searchString}
-              onSubmit={handleSearch}
-              onClear={handleClearSearch}
+              value={inputValue}
+              onChange={handleInputChange}
+              onSubmit={handleInputSubmit}
+              onClear={handleInputClear}
               submitButtonLocation="external"
             />
           )}
